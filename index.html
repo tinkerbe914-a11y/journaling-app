@@ -46,6 +46,25 @@
     opacity:.7;
   }
   @keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:1;}}
+  .music-widget{
+    position:fixed;right:16px;bottom:16px;z-index:40;
+    display:flex;align-items:center;gap:10px;
+    background:var(--card);border:1px solid var(--card-border);
+    border-radius:999px;padding:9px 14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  .music-btn{
+    background:none;border:none;color:var(--text);font-size:14px;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;gap:6px;padding:2px;white-space:nowrap;
+  }
+  .music-btn .mb-icon{font-size:16px;}
+  .music-volume{
+    width:64px;accent-color:var(--accent);cursor:pointer;
+  }
+  @media (max-width:360px){
+    .music-widget{padding:8px 10px;gap:6px;}
+    .music-volume{width:48px;}
+  }
   .app-shell{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 18px 56px;min-height:100vh;}
   .app-header{
     display:flex;align-items:center;justify-content:space-between;
@@ -189,6 +208,12 @@
 <body>
 <div class="sky" id="sky" aria-hidden="true">
   <div class="hillline"></div>
+</div>
+<div class="music-widget">
+  <button type="button" id="btn-music-toggle" class="music-btn" aria-label="眠りを誘う音楽を再生">
+    <span class="mb-icon" id="music-icon">▶</span><span id="music-label">音楽</span>
+  </button>
+  <input type="range" id="music-volume" class="music-volume" min="0" max="100" value="35" aria-label="音楽の音量">
 </div>
 <div class="app-shell">
 
@@ -387,6 +412,8 @@
     /終わりにしたい/, /消えてしまいたい/
   ];
 
+  var MUSIC_VOLUME_KEY = "bedtimeJournal.musicVolume.v1";
+
   var state = {
     entries: [],
     pattern: null,
@@ -394,7 +421,11 @@
     model: DEFAULT_MODEL,
     selectedTags: [],
     importDraft: [],
-    lastFailedAction: null
+    lastFailedAction: null,
+    audioCtx: null,
+    musicNodes: null,
+    musicPlaying: false,
+    musicVolume: 0.35
   };
 
   function $(id){ return document.getElementById(id); }
@@ -427,6 +458,10 @@
       var m = localStorage.getItem(MODEL_KEY);
       state.model = m || DEFAULT_MODEL;
     }catch(err){ state.model = DEFAULT_MODEL; }
+    try{
+      var v = localStorage.getItem(MUSIC_VOLUME_KEY);
+      state.musicVolume = v !== null ? parseFloat(v) : 0.35;
+    }catch(err){ state.musicVolume = 0.35; }
   }
   function persistEntries(){ localStorage.setItem(ENTRIES_KEY, JSON.stringify(state.entries)); }
   function persistPattern(){
@@ -434,6 +469,7 @@
     else localStorage.removeItem(PATTERN_KEY);
   }
   function persistModel(){ localStorage.setItem(MODEL_KEY, state.model); }
+  function persistMusicVolume(){ localStorage.setItem(MUSIC_VOLUME_KEY, String(state.musicVolume)); }
 
   function upsertEntry(entry){
     var idx = state.entries.findIndex(function(e){ return e.date === entry.date; });
@@ -1046,6 +1082,126 @@
     });
   }
 
+  // ---------- sleep-inducing ambient music (generated in-browser, no audio files) ----------
+  function ensureAudioContext(){
+    if(!state.audioCtx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      state.audioCtx = new AC();
+    }
+    return state.audioCtx;
+  }
+
+  function createBrownNoiseBuffer(ctx, seconds){
+    var length = Math.floor(ctx.sampleRate * seconds);
+    var buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var lastOut = 0;
+    for(var i = 0; i < length; i++){
+      var white = Math.random() * 2 - 1;
+      lastOut = (lastOut + 0.02 * white) / 1.02;
+      data[i] = lastOut * 3.2;
+    }
+    return buffer;
+  }
+
+  function startMusic(){
+    var ctx = ensureAudioContext();
+    if(ctx.state === "suspended"){ ctx.resume(); }
+    var now = ctx.currentTime;
+
+    var master = ctx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(state.musicVolume, now + 3);
+    master.connect(ctx.destination);
+
+    // soft wave-like noise bed
+    var noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = createBrownNoiseBuffer(ctx, 6);
+    noiseSource.loop = true;
+    var noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = "lowpass";
+    noiseFilter.frequency.value = 650;
+    var noiseGain = ctx.createGain();
+    noiseGain.gain.value = 0.55;
+    noiseSource.connect(noiseFilter).connect(noiseGain).connect(master);
+    noiseSource.start();
+
+    var waveLfo = ctx.createOscillator();
+    waveLfo.frequency.value = 0.07;
+    var waveLfoGain = ctx.createGain();
+    waveLfoGain.gain.value = 0.18;
+    waveLfo.connect(waveLfoGain).connect(noiseGain.gain);
+    waveLfo.start();
+
+    // slow, calm pad chord (no melody, just a held warm chord)
+    var padFreqs = [130.81, 164.81, 196.00, 261.63];
+    var oscillators = padFreqs.map(function(freq, i){
+      var osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      var oscGain = ctx.createGain();
+      oscGain.gain.value = i === 0 ? 0.075 : 0.045;
+      var padFilter = ctx.createBiquadFilter();
+      padFilter.type = "lowpass";
+      padFilter.frequency.value = 1100;
+      var vibrato = ctx.createOscillator();
+      vibrato.frequency.value = 0.08 + i * 0.015;
+      var vibratoGain = ctx.createGain();
+      vibratoGain.gain.value = 1.1;
+      vibrato.connect(vibratoGain).connect(osc.detune);
+      osc.connect(padFilter).connect(oscGain).connect(master);
+      osc.start();
+      vibrato.start();
+      return { osc: osc, vibrato: vibrato };
+    });
+
+    state.musicNodes = { ctx: ctx, master: master, noiseSource: noiseSource, waveLfo: waveLfo, oscillators: oscillators };
+    state.musicPlaying = true;
+    updateMusicButton();
+  }
+
+  function stopMusic(){
+    if(!state.musicNodes){ return; }
+    var n = state.musicNodes;
+    var ctx = n.ctx;
+    var now = ctx.currentTime;
+    n.master.gain.cancelScheduledValues(now);
+    n.master.gain.setValueAtTime(n.master.gain.value, now);
+    n.master.gain.linearRampToValueAtTime(0, now + 1.2);
+    setTimeout(function(){
+      try{ n.noiseSource.stop(); }catch(err){}
+      try{ n.waveLfo.stop(); }catch(err){}
+      n.oscillators.forEach(function(o){
+        try{ o.osc.stop(); }catch(err){}
+        try{ o.vibrato.stop(); }catch(err){}
+      });
+    }, 1300);
+    state.musicNodes = null;
+    state.musicPlaying = false;
+    updateMusicButton();
+  }
+
+  function toggleMusic(){
+    if(state.musicPlaying) stopMusic();
+    else startMusic();
+  }
+
+  function setMusicVolume(v){
+    state.musicVolume = v;
+    persistMusicVolume();
+    if(state.musicNodes){
+      var ctx = state.musicNodes.ctx;
+      state.musicNodes.master.gain.cancelScheduledValues(ctx.currentTime);
+      state.musicNodes.master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.25);
+    }
+  }
+
+  function updateMusicButton(){
+    $("music-icon").textContent = state.musicPlaying ? "⏸" : "▶";
+    $("music-label").textContent = state.musicPlaying ? "音楽を停止" : "音楽";
+    $("btn-music-toggle").setAttribute("aria-label", state.musicPlaying ? "眠りを誘う音楽を停止" : "眠りを誘う音楽を再生");
+  }
+
   // ---------- night sky background ----------
   function renderSky(){
     var sky = $("sky");
@@ -1072,6 +1228,12 @@
     loadState();
     prefillHomeForm();
     renderSky();
+
+    $("music-volume").value = String(Math.round(state.musicVolume * 100));
+    $("btn-music-toggle").addEventListener("click", toggleMusic);
+    $("music-volume").addEventListener("input", function(){
+      setMusicVolume(parseInt($("music-volume").value, 10) / 100);
+    });
 
     $("btn-settings").addEventListener("click", openSettings);
     $("btn-close-settings").addEventListener("click", closeSettings);
