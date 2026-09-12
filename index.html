@@ -24,13 +24,34 @@
   [hidden]{display:none !important;}
   html,body{margin:0;padding:0;}
   body{
-    background:linear-gradient(180deg,#0e1224,#161c3a 60%,#12172a);
+    background:#070a16;
     color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
     min-height:100vh;
     line-height:1.7;
   }
-  .app-shell{max-width:520px;margin:0 auto;padding:0 18px 56px;min-height:100vh;}
+  .sky{
+    position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% -10%, #232c5c 0%, transparent 60%),
+      radial-gradient(ellipse at top, #1b2350 0%, #0d1128 55%, #070914 100%);
+  }
+  .sky .moon{
+    position:absolute;top:92px;right:34px;width:60px;height:60px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fffaf0, #f2d9a0 55%, transparent 72%);
+    box-shadow:0 0 46px 12px rgba(242,216,150,.22), 0 0 100px 34px rgba(242,216,150,.08);
+  }
+  .sky .star{
+    position:absolute;background:#fff;border-radius:50%;
+    animation:twinkle ease-in-out infinite;
+  }
+  .sky .hillline{
+    position:absolute;left:-5%;right:-5%;bottom:-2%;height:14%;
+    background:#080a18;border-radius:50% 50% 0 0/100% 100% 0 0;
+    opacity:.7;
+  }
+  @keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:1;}}
+  .app-shell{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 18px 56px;min-height:100vh;}
   .app-header{
     display:flex;align-items:center;justify-content:space-between;
     padding:20px 0 8px;
@@ -171,6 +192,10 @@
 </style>
 </head>
 <body>
+<div class="sky" id="sky" aria-hidden="true">
+  <div class="moon"></div>
+  <div class="hillline"></div>
+</div>
 <div class="app-shell">
 
   <header class="app-header">
@@ -1027,10 +1052,32 @@
     });
   }
 
+  // ---------- night sky background ----------
+  function renderSky(){
+    var sky = $("sky");
+    if(!sky) return;
+    var count = window.innerWidth < 480 ? 70 : 110;
+    var frag = document.createDocumentFragment();
+    for(var i = 0; i < count; i++){
+      var star = document.createElement("span");
+      star.className = "star";
+      var size = (Math.random() * 1.8 + 0.6).toFixed(2);
+      star.style.width = size + "px";
+      star.style.height = size + "px";
+      star.style.top = (Math.random() * 92).toFixed(2) + "%";
+      star.style.left = (Math.random() * 100).toFixed(2) + "%";
+      star.style.animationDuration = (Math.random() * 3 + 2.5).toFixed(2) + "s";
+      star.style.animationDelay = (Math.random() * 4).toFixed(2) + "s";
+      frag.appendChild(star);
+    }
+    sky.appendChild(frag);
+  }
+
   // ---------- wiring ----------
   function init(){
     loadState();
     prefillHomeForm();
+    renderSky();
 
     $("btn-settings").addEventListener("click", openSettings);
     $("btn-close-settings").addEventListener("click", closeSettings);
