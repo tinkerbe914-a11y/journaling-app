@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>寝る前5分ジャーナル</title>
+<style>
+  :root{
+    --bg:#12172a;
+    --bg-soft:#1b2140;
+    --card:#20264a;
+    --card-border:#2e3560;
+    --text:#eef1fb;
+    --text-dim:#a7addc;
+    --accent:#f2b880;
+    --accent-dim:#8a6a45;
+    --accent-2:#8ab6f9;
+    --danger:#f29a9a;
+    --danger-bg:#3a2230;
+    --radius:18px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:linear-gradient(180deg,#0e1224,#161c3a 60%,#12172a);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+    min-height:100vh;
+    line-height:1.7;
+  }
+  .app-shell{max-width:520px;margin:0 auto;padding:0 18px 56px;min-height:100vh;}
+  .app-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 0 8px;
+  }
+  .brand{font-size:16px;font-weight:600;letter-spacing:.02em;color:var(--text);}
+  .brand .moon{margin-right:6px;}
+  .icon-btn{
+    background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);
+    width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .icon-btn:hover{color:var(--accent);border-color:var(--accent-dim);}
+  .screen{display:none;animation:fadein .25s ease;}
+  .screen.active{display:block;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .tagline{color:var(--text-dim);font-size:13.5px;margin:4px 0 18px;}
+  .date-badge{
+    display:inline-block;font-size:12.5px;color:var(--accent);
+    background:rgba(242,184,128,.08);border:1px solid var(--accent-dim);
+    padding:4px 12px;border-radius:999px;margin-bottom:18px;
+  }
+  .screen-title{font-size:19px;font-weight:700;margin:6px 0 14px;}
+  .field{margin-bottom:20px;}
+  .field label{display:block;font-size:14.5px;font-weight:600;margin-bottom:8px;color:var(--text);}
+  textarea,input[type="text"],input[type="password"],input[type="date"]{
+    width:100%;background:var(--bg-soft);border:1px solid var(--card-border);
+    color:var(--text);border-radius:var(--radius-sm);padding:12px 14px;
+    font-size:15px;font-family:inherit;resize:vertical;transition:border-color .15s;
+  }
+  textarea:focus,input:focus{outline:none;border-color:var(--accent-2);}
+  textarea::placeholder,input::placeholder{color:#5c6394;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .tag-chip{
+    background:var(--bg-soft);border:1px solid var(--card-border);color:var(--text-dim);
+    padding:6px 13px;border-radius:999px;font-size:13px;cursor:pointer;user-select:none;
+    transition:.15s;
+  }
+  .tag-chip.selected{background:rgba(242,184,128,.15);border-color:var(--accent);color:var(--accent);}
+  .field-error{color:var(--danger);font-size:13px;margin:-8px 0 14px;}
+  .field-note{color:var(--text-dim);font-size:12px;margin-top:6px;}
+  .btn-primary{
+    width:100%;background:linear-gradient(135deg,var(--accent),#e0975b);
+    color:#20140a;border:none;border-radius:999px;padding:15px 18px;
+    font-size:15.5px;font-weight:700;cursor:pointer;transition:.15s;
+    box-shadow:0 6px 18px rgba(242,184,128,.18);
+  }
+  .btn-primary:hover{filter:brightness(1.05);}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-secondary{
+    width:100%;background:var(--card);border:1px solid var(--card-border);
+    color:var(--text);border-radius:999px;padding:13px 18px;font-size:14.5px;
+    font-weight:600;cursor:pointer;margin-top:10px;transition:.15s;
+  }
+  .btn-secondary:hover{border-color:var(--accent-2);}
+  .btn-secondary.small,.btn-text.small{width:auto;padding:8px 16px;font-size:13px;}
+  .btn-text{
+    background:none;border:none;color:var(--text-dim);font-size:13.5px;cursor:pointer;
+    text-decoration:underline;padding:8px;
+  }
+  .home-links{display:flex;justify-content:space-between;margin-top:22px;flex-wrap:wrap;gap:6px;}
+  .link-btn{
+    background:none;border:none;color:var(--accent-2);font-size:13.5px;cursor:pointer;
+    padding:6px 0;text-decoration:underline;
+  }
+  .result-card{
+    background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
+    padding:18px 18px;margin-bottom:14px;
+  }
+  .result-card h3{margin:0 0 8px;font-size:14px;color:var(--accent-2);font-weight:700;}
+  .result-card p{margin:0;font-size:15px;color:var(--text);}
+  .result-card ul{margin:0;padding-left:20px;}
+  .result-card li{margin-bottom:6px;font-size:14.5px;}
+  .result-card.highlight{
+    background:linear-gradient(135deg,rgba(242,184,128,.14),rgba(138,182,249,.08));
+    border-color:var(--accent-dim);text-align:center;
+  }
+  .result-label{font-size:22px;font-weight:800;color:var(--accent);}
+  .result-actions{display:flex;flex-direction:column;gap:0;margin-top:6px;}
+  .hint-text{color:var(--text-dim);font-size:13px;text-align:center;margin:10px 0;}
+  .pattern-meta{color:var(--text-dim);font-size:12.5px;margin:-8px 0 16px;}
+  .history-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .history-item{
+    background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+    padding:13px 15px;cursor:pointer;
+  }
+  .history-item .hi-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .history-item .hi-date{font-size:12.5px;color:var(--text-dim);}
+  .history-item .hi-label{font-size:14.5px;font-weight:700;color:var(--accent);}
+  .history-item .hi-tags{font-size:12px;color:var(--text-dim);margin-top:4px;}
+  .history-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--card-border);font-size:13.5px;color:var(--text-dim);display:none;}
+  .history-detail.open{display:block;}
+  .history-detail p{margin:0 0 8px;}
+  .history-detail b{color:var(--text);}
+  .format-example{background:var(--bg-soft);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--text-dim);}
+  .format-example pre{white-space:pre-wrap;margin:8px 0 0;font-size:12.5px;color:var(--text-dim);}
+  #import-preview{display:flex;flex-direction:column;gap:12px;margin:16px 0;}
+  .import-row{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:14px;}
+  .import-row .ir-line{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+  .import-row .ir-line label{width:64px;flex-shrink:0;font-size:12.5px;color:var(--text-dim);padding-top:10px;}
+  .import-row .ir-remove{color:var(--danger);background:none;border:none;font-size:12.5px;cursor:pointer;text-decoration:underline;}
+  .overlay{
+    position:fixed;inset:0;background:rgba(10,13,28,.86);z-index:50;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    text-align:center;padding:20px;
+  }
+  .spinner{
+    width:42px;height:42px;border-radius:50%;
+    border:3px solid rgba(242,184,128,.25);border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  #loading-text{color:var(--text-dim);font-size:14px;max-width:280px;}
+  .error-banner{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:var(--danger-bg);border-top:1px solid #6b3a45;
+    padding:14px 18px calc(14px + env(safe-area-inset-bottom));
+  }
+  .error-banner p{margin:0 0 10px;color:var(--danger);font-size:13.5px;max-width:520px;margin-left:auto;margin-right:auto;}
+  .error-actions{display:flex;gap:10px;justify-content:center;}
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(8,10,22,.7);z-index:70;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .modal{
+    background:var(--bg-soft);border:1px solid var(--card-border);
+    border-radius:20px 20px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+    width:100%;max-width:520px;
+  }
+  .modal h2{margin:0 0 16px;font-size:17px;}
+  .safety-card p{margin-bottom:14px;}
+  .safety-contacts{list-style:none;padding:0;margin:0;font-size:14px;}
+  .safety-contacts li{margin-bottom:8px;}
+  .safety-contacts a{color:var(--accent-2);}
+  .footnote{color:#5c6394;font-size:11.5px;text-align:center;margin-top:28px;}
+  @media (min-width:540px){
+    .home-links{justify-content:flex-start;gap:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="brand"><span class="moon">🌙</span>寝る前5分ジャーナル</div>
+    <button class="icon-btn" id="btn-settings" title="設定" aria-label="設定">⚙</button>
+  </header>
+
+  <main>
+
+    <!-- HOME -->
+    <section id="screen-home" class="screen active">
+      <p class="tagline">今日を記録するだけじゃない。続けるほど、自分の取扱説明書ができていく。</p>
+      <div class="date-badge" id="home-date"></div>
+      <form id="form-today">
+        <div class="field">
+          <label for="input-event">Q1. 今日、いちばん心に残っていることは？</label>
+          <textarea id="input-event" rows="2" placeholder="例：後輩との打ち合わせが思ったより長引いた"></textarea>
+        </div>
+        <div class="field">
+          <label for="input-emotion-text">Q2. そのとき、どんな気持ちだった？</label>
+          <textarea id="input-emotion-text" rows="2" placeholder="例：疲れたけど、少しホッとした"></textarea>
+          <div class="tag-list" id="emotion-tags"></div>
+        </div>
+        <div class="field">
+          <label for="input-self-message">Q3. 今日の自分にひとこと言うなら？</label>
+          <textarea id="input-self-message" rows="2" placeholder="例：疲れていたけど、ジムまで行けたのはよかった"></textarea>
+        </div>
+        <p class="field-error" id="form-error" hidden></p>
+        <button type="submit" class="btn-primary" id="btn-submit">今日を振り返る</button>
+        <p class="hint-text" id="apikey-hint" hidden>※ 初回はAPIキーの設定が必要です</p>
+      </form>
+      <div class="home-links">
+        <button class="link-btn" id="btn-goto-pattern">自分の取扱説明書</button>
+        <button class="link-btn" id="btn-goto-history">履歴</button>
+        <button class="link-btn" id="btn-goto-import">サンプル読み込み</button>
+      </div>
+      <p class="footnote">本アプリはセルフリフレクションの補助を目的としており、医療・心理的な診断や治療を行うものではありません。</p>
+    </section>
+
+    <!-- RESULT -->
+    <section id="screen-result" class="screen">
+      <h2 class="screen-title">今日のあなた</h2>
+      <div class="result-card highlight">
+        <div class="result-label" id="result-today-label"></div>
+      </div>
+      <div class="result-card">
+        <h3>AIが見つけた小さな気づき</h3>
+        <p id="result-insight"></p>
+      </div>
+      <div class="result-card">
+        <h3>明日への一言</h3>
+        <p id="result-tomorrow-hint"></p>
+      </div>
+      <div class="result-actions">
+        <button class="btn-secondary" id="btn-regenerate">作り直す</button>
+        <button class="btn-primary" id="btn-see-pattern" style="margin-top:10px;">自分の取扱説明書を見る</button>
+      </div>
+      <p class="hint-text" id="pattern-lock-hint" hidden></p>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="link-btn" id="btn-result-home">ホームに戻る</button>
+      </div>
+    </section>
+
+    <!-- PATTERN -->
+    <section id="screen-pattern" class="screen">
+      <h2 class="screen-title" id="pattern-title">自分の取扱説明書</h2>
+      <p class="pattern-meta" id="pattern-meta"></p>
+      <div class="result-card" id="pattern-recent-wrap">
+        <h3>最近のあなた</h3>
+        <p id="pattern-recent"></p>
+      </div>
+      <div class="result-card" id="pattern-changes-wrap">
+        <h3>見えてきた変化</h3>
+        <ul id="pattern-changes"></ul>
+      </div>
+      <div class="result-card" id="pattern-drainers-wrap">
+        <h3>あなたを消耗させやすいもの</h3>
+        <ul id="pattern-drainers"></ul>
+      </div>
+      <div class="result-card" id="pattern-recovery-wrap">
+        <h3>あなたを整えているもの</h3>
+        <ul id="pattern-recovery"></ul>
+      </div>
+      <div class="result-card" id="pattern-hidden-wrap">
+        <h3>本人が見落としていたかもしれない気づき</h3>
+        <p id="pattern-hidden"></p>
+      </div>
+      <button class="btn-secondary" id="btn-refresh-pattern">最新の記録で作り直す</button>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="link-btn" id="btn-pattern-home">ホームに戻る</button>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="screen-history" class="screen">
+      <h2 class="screen-title">履歴</h2>
+      <div id="history-list" class="history-list"></div>
+      <button class="link-btn" id="btn-history-home">ホームに戻る</button>
+    </section>
+
+    <!-- IMPORT -->
+    <section id="screen-import" class="screen">
+      <h2 class="screen-title">サンプル日記 一括読み込み</h2>
+      <p class="tagline">日付ごとに空行で区切って貼り付けてください。「出来事」「気持ち」「ひとこと」のラベルがあると自動で認識されます。</p>
+      <details class="format-example">
+        <summary>入力例を見る</summary>
+        <pre>2026-08-01
+出来事: 後輩との打ち合わせが長引いた
+気持ち: 疲れた、モヤモヤ
+ひとこと: 疲れていたけど頑張れた
+
+2026-08-02
+出来事: ジムで新しいメニューに挑戦した
+気持ち: 達成感
+ひとこと: 継続できている自分を褒めたい</pre>
+      </details>
+      <div class="field">
+        <textarea id="import-textarea" rows="8" placeholder="ここにサンプル日記を貼り付けてください"></textarea>
+      </div>
+      <button class="btn-secondary" id="btn-parse-import">解析する</button>
+      <div id="import-preview"></div>
+      <div class="result-actions" id="import-confirm-actions" hidden>
+        <button class="btn-primary" id="btn-confirm-import">登録して分析する</button>
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="link-btn" id="btn-import-home">ホームに戻る</button>
+      </div>
+    </section>
+
+    <!-- SAFETY -->
+    <section id="screen-safety" class="screen">
+      <h2 class="screen-title">大切なお知らせ</h2>
+      <div class="result-card safety-card">
+        <p id="safety-message"></p>
+        <ul class="safety-contacts">
+          <li>よりそいホットライン（24時間・無料）：<a href="tel:0120279338">0120-279-338</a></li>
+          <li>いのちの電話：<a href="tel:0570783556">0570-783-556</a></li>
+          <li><a href="https://www.mhlw.go.jp/mamorouyokokoro/" target="_blank" rel="noopener">厚生労働省「まもろうよ こころ」相談窓口一覧</a></li>
+        </ul>
+      </div>
+      <button class="link-btn" id="btn-safety-home">ホームに戻る</button>
+    </section>
+
+  </main>
+</div>
+
+<!-- LOADING -->
+<div id="loading-overlay" class="overlay" hidden>
+  <div class="spinner"></div>
+  <p id="loading-text">AIがあなたの一日を読み解いています…</p>
+</div>
+
+<!-- ERROR BANNER -->
+<div id="error-banner" class="error-banner" hidden>
+  <p id="error-message"></p>
+  <div class="error-actions">
+    <button id="btn-error-retry" class="btn-secondary small">再試行</button>
+    <button id="btn-error-dismiss" class="btn-text small">閉じる</button>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="modal-settings" class="modal-overlay" hidden>
+  <div class="modal">
+    <h2>設定</h2>
+    <div class="field">
+      <label for="input-api-key">Anthropic APIキー</label>
+      <input type="password" id="input-api-key" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+      <p class="field-note">このキーは端末のメモリ上にのみ保持され、コードやlocalStorageには保存されません。タブを閉じる・再読み込みすると消えるため、再入力が必要です。</p>
+    </div>
+    <div class="field">
+      <label for="input-model">モデル名</label>
+      <input type="text" id="input-model" placeholder="claude-sonnet-5" spellcheck="false">
+      <p class="field-note">お使いのAPIキーで利用できるモデルIDを入力してください。</p>
+    </div>
+    <button class="btn-primary" id="btn-save-settings">保存</button>
+    <button class="btn-text" id="btn-close-settings" style="display:block;margin:8px auto 0;">閉じる</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DEFAULT_MODEL = "claude-sonnet-5";
+  var ENTRIES_KEY = "bedtimeJournal.entries.v1";
+  var PATTERN_KEY = "bedtimeJournal.pattern.v1";
+  var MODEL_KEY = "bedtimeJournal.model.v1";
+
+  var EMOTION_TAG_OPTIONS = ["疲れた","モヤモヤ","うれしい","達成感","安心","イライラ","不安","悲しい","落ち着く","ホッとした"];
+
+  var UNSAFE_PATTERNS = [
+    /死にたい/, /消えたい/, /自殺/, /生きていたくない/, /生きる意味がない/,
+    /自傷/, /リストカット/, /殺したい/, /飛び降り/, /いなくなりたい/,
+    /終わりにしたい/, /消えてしまいたい/
+  ];
+
+  var state = {
+    entries: [],
+    pattern: null,
+    apiKey: "",
+    model: DEFAULT_MODEL,
+    selectedTags: [],
+    importDraft: [],
+    lastFailedAction: null
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function escapeHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+  function formatDateLocal(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function todayStr(){ return formatDateLocal(new Date()); }
+  function formatDateDisplay(iso){
+    var p = iso.split("-");
+    if(p.length!==3) return iso;
+    return p[0]+"年"+parseInt(p[1],10)+"月"+parseInt(p[2],10)+"日";
+  }
+
+  // ---------- persistence ----------
+  function loadState(){
+    try{
+      var e = localStorage.getItem(ENTRIES_KEY);
+      state.entries = e ? JSON.parse(e) : [];
+    }catch(err){ state.entries = []; }
+    try{
+      var p = localStorage.getItem(PATTERN_KEY);
+      state.pattern = p ? JSON.parse(p) : null;
+    }catch(err){ state.pattern = null; }
+    try{
+      var m = localStorage.getItem(MODEL_KEY);
+      state.model = m || DEFAULT_MODEL;
+    }catch(err){ state.model = DEFAULT_MODEL; }
+  }
+  function persistEntries(){ localStorage.setItem(ENTRIES_KEY, JSON.stringify(state.entries)); }
+  function persistPattern(){
+    if(state.pattern) localStorage.setItem(PATTERN_KEY, JSON.stringify(state.pattern));
+    else localStorage.removeItem(PATTERN_KEY);
+  }
+  function persistModel(){ localStorage.setItem(MODEL_KEY, state.model); }
+
+  function upsertEntry(entry){
+    var idx = state.entries.findIndex(function(e){ return e.date === entry.date; });
+    if(idx >= 0) state.entries[idx] = entry;
+    else state.entries.push(entry);
+    state.entries.sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    persistEntries();
+  }
+  function entriesDesc(){
+    return state.entries.slice().sort(function(a,b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+  }
+  function safeEntries(){ return state.entries.filter(function(e){ return !e.safetyFlag; }); }
+
+  // ---------- screen navigation ----------
+  function showScreen(name){
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+    $("screen-"+name).classList.add("active");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  // ---------- loading / error ----------
+  function showLoading(text){
+    $("loading-text").textContent = text || "AIが考えています…";
+    $("loading-overlay").hidden = false;
+  }
+  function hideLoading(){ $("loading-overlay").hidden = true; }
+  function showError(err, retryFn){
+    state.lastFailedAction = retryFn || null;
+    $("error-message").textContent = (err && err.message) ? err.message : "エラーが発生しました。もう一度お試しください。";
+    $("btn-error-retry").style.display = retryFn ? "inline-block" : "none";
+    $("error-banner").hidden = false;
+  }
+  function hideError(){ $("error-banner").hidden = true; }
+
+  // ---------- settings modal ----------
+  function openSettings(){
+    $("input-api-key").value = state.apiKey;
+    $("input-model").value = state.model;
+    $("modal-settings").hidden = false;
+  }
+  function closeSettings(){ $("modal-settings").hidden = true; }
+
+  // ---------- safety ----------
+  function isUnsafeText(text){
+    return UNSAFE_PATTERNS.some(function(p){ return p.test(text); });
+  }
+  function showSafetyScreen(){
+    $("safety-message").textContent =
+      "つらい気持ちを抱えていらっしゃるかもしれません。このアプリはAIによる自己分析の補助であり、医療的・心理的な診断や治療を行うものではないため、今回の記録についてのAI分析は行いませんでした。もし強いつらさや、消えてしまいたいという気持ちが続く場合は、下記の相談窓口へのご連絡をご検討ください。あなたの気持ちを話せる場所があります。";
+    showScreen("safety");
+  }
+
+  // ---------- prompt building ----------
+  var SYSTEM_PROMPT = [
+    "あなたは「寝る前5分ジャーナリング」アプリのAIパートナーです。",
+    "ユーザーが寝る前に書いた短い記録から、一般論ではなく本人固有の気づきを言語化して返します。",
+    "以下のルールを必ず守ってください。",
+    "1. 必ず入力にある具体的なエピソードに触れる。",
+    "2. 過去の記録が渡されている場合は、最低1つ過去との比較・関連に触れる。",
+    "3.「あなたは〜な人です」のような人格の断定はしない。",
+    "4. ネガティブな分析だけで終わらせず、本人ができていること・回復につながった行動も拾う。",
+    "5. 同じ言い回しを繰り返さず、その日・その人の入力に即した表現にする。",
+    "6. 1つのセクションを長文にしすぎず、疲れている夜でも読める分量にする。",
+    "7.「頑張りましょう」のような一般的な励ましだけで終わらせない。命令や説教もしない。",
+    "8. 根拠が弱い場合は「〜かもしれません」「〜の傾向がありそうです」のように断定を避けた表現にする。",
+    "9. 心理診断や医療的判断は行わない。",
+    "10. 入力にない事実を作らない。",
+    "必ず指定されたツールを1回呼び出し、指定フィールドのみを日本語で埋めて回答してください。"
+  ].join("\n");
+
+  function historyContextLines(pastEntries){
+    if(!pastEntries.length) return "(過去の記録なし。これが最初の記録です)";
+    return pastEntries.map(function(e){
+      var tags = (e.emotionTags && e.emotionTags.length) ? e.emotionTags.join("・") : "なし";
+      var insight = (e.aiResult && e.aiResult.insight) ? e.aiResult.insight : "なし";
+      return "- " + e.date + " | 出来事: " + e.event + " | 感情: " + (e.emotionText || "(未記入)") +
+        " | 感情タグ: " + tags + " | 自己評価(ひとこと): " + e.selfMessage + " | 過去に抽出した気づき: " + insight;
+    }).join("\n");
+  }
+
+  function buildTodayUserPrompt(entry, pastEntries, totalCount){
+    return [
+      "[ユーザー情報]",
+      "- 想定ユーザー: 忙しい社会人",
+      "- 記録日数: " + totalCount + "日",
+      "",
+      "[今日の記録]",
+      "- 日付: " + entry.date,
+      "- 心に残った出来事: " + entry.event,
+      "- 感情(自由記述): " + (entry.emotionText || "(未記入)"),
+      "- 感情タグ: " + (entry.emotionTags.length ? entry.emotionTags.join("・") : "なし"),
+      "- 今日の自分へのひとこと: " + entry.selfMessage,
+      "",
+      "[過去の記録(直近分)]",
+      historyContextLines(pastEntries.slice(-7)),
+      "",
+      "[分析してほしい観点]",
+      "- 今日の出来事と感情の関係",
+      "- 過去との共通点や違い(過去の記録がある場合のみ)",
+      "- 本人の自己評価と実際の行動・出来事とのズレ",
+      "",
+      "[禁止事項]",
+      "- 一般論だけで終わらない",
+      "- 入力にない事実を作らない",
+      "- 心理診断をしない",
+      "- 強く断定しない",
+      "- 説教・過度な励ましをしない",
+      "",
+      "上記を踏まえ、submit_today_reflection ツールを1回呼び出して結果を送信してください。"
+    ].join("\n");
+  }
+
+  function buildPatternUserPrompt(allEntries){
+    var sorted = allEntries.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; }).slice(-14);
+    return [
+      "[ユーザー情報]",
+      "- 想定ユーザー: 忙しい社会人",
+      "- 記録日数: " + allEntries.length + "日",
+      "",
+      "[記録一覧(日付昇順)]",
+      historyContextLines(sorted),
+      "",
+      "[分析してほしい観点]",
+      "- 同じ感情や状況が出やすい場面",
+      "- 回復や気持ちの切り替えにつながった行動",
+      "- 最近増えている、または減っている要素",
+      "- 複数日にまたがる変化",
+      "- 繰り返し起きているパターン",
+      "- 本人の自己評価と実際の行動・出来事とのズレで、本人がまだ気づいていなさそうなもの",
+      "",
+      "[禁止事項]",
+      "- 一般論だけで終わらない",
+      "- 入力にない事実を作らない",
+      "- 心理診断をしない",
+      "- 強く断定しない(「〜の傾向がありそうです」のような表現を使う)",
+      "- ネガティブな内容だけで終わらせない",
+      "",
+      "上記を踏まえ、submit_pattern_analysis ツールを1回呼び出して結果を送信してください。",
+      "energy_drainers・recovery_factors・changes は、それぞれ根拠のあるものだけを1〜3個程度の配列で返してください。根拠が無ければ空配列にしてください。"
+    ].join("\n");
+  }
+
+  var TODAY_TOOL = {
+    name: "submit_today_reflection",
+    description: "今日の振り返り結果を送信する",
+    input_schema: {
+      type: "object",
+      properties: {
+        today_label: { type: "string", description: "今日という日を表す短い一言(20字程度)" },
+        insight: { type: "string", description: "今日の具体的なエピソードを根拠にした気づき(120〜180字程度)" },
+        tomorrow_hint: { type: "string", description: "明日に持ち越せる小さな視点。命令や説教をしない(60字程度)" }
+      },
+      required: ["today_label", "insight", "tomorrow_hint"]
+    }
+  };
+
+  var PATTERN_TOOL = {
+    name: "submit_pattern_analysis",
+    description: "複数日の記録から見えるパターンを送信する",
+    input_schema: {
+      type: "object",
+      properties: {
+        recent_pattern: { type: "string", description: "最近の傾向を短くまとめた文章" },
+        energy_drainers: { type: "array", items: { type: "string" }, description: "本人を消耗させやすい要因。根拠のあるものだけ" },
+        recovery_factors: { type: "array", items: { type: "string" }, description: "本人を整えている・回復させている要因" },
+        changes: { type: "array", items: { type: "string" }, description: "複数日で見える変化" },
+        hidden_insight: { type: "string", description: "本人がまだ気づいていない可能性のある気づき" }
+      },
+      required: ["recent_pattern", "energy_drainers", "recovery_factors", "changes", "hidden_insight"]
+    }
+  };
+
+  // ---------- API call ----------
+  function callClaude(userPrompt, tool){
+    if(!state.apiKey){
+      return Promise.reject(new Error("APIキーが設定されていません。右上の⚙から設定してください。"));
+    }
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, 15000);
+
+    return fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": state.apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: state.model || DEFAULT_MODEL,
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userPrompt }],
+        tools: [tool],
+        tool_choice: { type: "tool", name: tool.name }
+      }),
+      signal: controller.signal
+    }).catch(function(err){
+      if(err && err.name === "AbortError"){
+        throw new Error("応答に時間がかかりすぎたため中断しました(タイムアウト)。もう一度お試しください。");
+      }
+      throw new Error("通信に失敗しました。ネットワーク接続を確認してもう一度お試しください。");
+    }).then(function(res){
+      if(!res.ok){
+        return res.json().catch(function(){ return null; }).then(function(body){
+          var msg = "APIエラーが発生しました(" + res.status + ")";
+          if(body && body.error && body.error.message) msg += ": " + body.error.message;
+          if(res.status === 401) msg = "APIキーが正しくないか、権限がありません。設定を確認してください。";
+          if(res.status === 429) msg = "リクエストが混み合っています。しばらく待って再試行してください。";
+          throw new Error(msg);
+        });
+      }
+      return res.json();
+    }).then(function(data){
+      var content = data.content || [];
+      var toolUse = content.find(function(c){ return c.type === "tool_use" && c.name === tool.name; });
+      if(!toolUse) throw new Error("AIからの応答を解析できませんでした。もう一度お試しください。");
+      return toolUse.input;
+    }).finally(function(){ clearTimeout(timer); });
+  }
+
+  function callToday(entry, pastEntries, totalCount){
+    return callClaude(buildTodayUserPrompt(entry, pastEntries, totalCount), TODAY_TOOL);
+  }
+  function callPattern(allEntries){
+    return callClaude(buildPatternUserPrompt(allEntries), PATTERN_TOOL);
+  }
+
+  // ---------- home / form ----------
+  function renderEmotionTags(){
+    var wrap = $("emotion-tags");
+    wrap.innerHTML = "";
+    EMOTION_TAG_OPTIONS.forEach(function(tag){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tag-chip" + (state.selectedTags.indexOf(tag) >= 0 ? " selected" : "");
+      btn.textContent = tag;
+      btn.addEventListener("click", function(){
+        var i = state.selectedTags.indexOf(tag);
+        if(i >= 0) state.selectedTags.splice(i,1);
+        else state.selectedTags.push(tag);
+        renderEmotionTags();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function prefillHomeForm(){
+    $("home-date").textContent = formatDateDisplay(todayStr());
+    var existing = state.entries.find(function(e){ return e.date === todayStr(); });
+    if(existing){
+      $("input-event").value = existing.event || "";
+      $("input-emotion-text").value = existing.emotionText || "";
+      $("input-self-message").value = existing.selfMessage || "";
+      state.selectedTags = (existing.emotionTags || []).slice();
+    } else {
+      $("input-event").value = "";
+      $("input-emotion-text").value = "";
+      $("input-self-message").value = "";
+      state.selectedTags = [];
+    }
+    renderEmotionTags();
+    $("apikey-hint").hidden = !!state.apiKey;
+  }
+
+  function handleSubmitToday(){
+    hideError();
+    var event = $("input-event").value.trim();
+    var emotionText = $("input-emotion-text").value.trim();
+    var selfMessage = $("input-self-message").value.trim();
+
+    if(!event || !selfMessage || (!emotionText && state.selectedTags.length === 0)){
+      $("form-error").textContent = "Q1・Q3は必須です。Q2は自由記述か感情タグのどちらかを入力してください。";
+      $("form-error").hidden = false;
+      return;
+    }
+    $("form-error").hidden = true;
+
+    if(!state.apiKey){
+      openSettings();
+      $("form-error").textContent = "APIキーを設定してから、もう一度「今日を振り返る」を押してください。";
+      $("form-error").hidden = false;
+      return;
+    }
+
+    var entry = {
+      date: todayStr(),
+      event: event,
+      emotionText: emotionText,
+      emotionTags: state.selectedTags.slice(),
+      selfMessage: selfMessage,
+      aiResult: null,
+      safetyFlag: false
+    };
+
+    var combined = event + " " + emotionText + " " + selfMessage;
+    if(isUnsafeText(combined)){
+      entry.safetyFlag = true;
+      upsertEntry(entry);
+      showSafetyScreen();
+      return;
+    }
+
+    upsertEntry(entry);
+    runTodayAndPattern(entry);
+  }
+
+  function runTodayAndPattern(entry){
+    showLoading("AIがあなたの一日を読み解いています…");
+    var pastEntries = safeEntries().filter(function(e){ return e.date !== entry.date; });
+    var totalCount = safeEntries().length;
+
+    callToday(entry, pastEntries, totalCount).then(function(todayResult){
+      entry.aiResult = todayResult;
+      upsertEntry(entry);
+
+      var all = safeEntries();
+      if(all.length >= 2){
+        showLoading("過去の記録と照らし合わせています…");
+        return callPattern(all).then(function(patternResult){
+          state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
+          persistPattern();
+        });
+      }
+    }).then(function(){
+      hideLoading();
+      renderResultScreen(entry);
+      showScreen("result");
+    }).catch(function(err){
+      hideLoading();
+      showError(err, function(){ runTodayAndPattern(entry); });
+    });
+  }
+
+  // ---------- result screen ----------
+  function renderResultScreen(entry){
+    var r = entry.aiResult || { today_label:"", insight:"", tomorrow_hint:"" };
+    $("result-today-label").textContent = r.today_label;
+    $("result-insight").textContent = r.insight;
+    $("result-tomorrow-hint").textContent = r.tomorrow_hint;
+
+    var count = safeEntries().length;
+    if(state.pattern){
+      $("btn-see-pattern").hidden = false;
+      $("pattern-lock-hint").hidden = true;
+    } else {
+      $("btn-see-pattern").hidden = true;
+      $("pattern-lock-hint").hidden = false;
+      var remain = Math.max(0, 2 - count);
+      $("pattern-lock-hint").textContent = remain > 0
+        ? "あと" + remain + "日記録すると「最近のあなた」が見られるようになります"
+        : "記録が増えると「最近のあなた」が見られるようになります";
+    }
+    state._currentResultEntry = entry;
+  }
+
+  function handleRegenerate(){
+    var entry = state._currentResultEntry;
+    if(!entry) return;
+    hideError();
+    showLoading("もう一度、今日を読み解いています…");
+    var pastEntries = safeEntries().filter(function(e){ return e.date !== entry.date; });
+    var totalCount = safeEntries().length;
+    callToday(entry, pastEntries, totalCount).then(function(todayResult){
+      entry.aiResult = todayResult;
+      upsertEntry(entry);
+      hideLoading();
+      renderResultScreen(entry);
+    }).catch(function(err){
+      hideLoading();
+      showError(err, handleRegenerate);
+    });
+  }
+
+  // ---------- pattern screen ----------
+  function tierForCount(n){
+    if(n >= 7) return "full";
+    if(n >= 4) return "mid";
+    if(n >= 2) return "early";
+    return "none";
+  }
+
+  function renderPatternScreen(){
+    if(!state.pattern){
+      showError(new Error("記録がまだ足りないため、自分の取扱説明書はまだ表示できません。2日以上記録すると表示されます。"), null);
+      showScreen("home");
+      return;
+    }
+    var n = state.pattern.basedOnCount;
+    var tier = tierForCount(n);
+    var d = state.pattern.data;
+
+    $("pattern-title").textContent = tier === "full" ? n + "日間のあなた" :
+      tier === "mid" ? "最近のあなた" : "少しずつ見えてきたこと";
+    $("pattern-meta").textContent = "直近" + n + "日分の記録をもとにしています";
+
+    $("pattern-recent").textContent = d.recent_pattern || "";
+    $("pattern-recent-wrap").hidden = false;
+
+    var changesUl = $("pattern-changes");
+    changesUl.innerHTML = (d.changes || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
+    $("pattern-changes-wrap").hidden = !(d.changes && d.changes.length);
+
+    var drainersUl = $("pattern-drainers");
+    drainersUl.innerHTML = (d.energy_drainers || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
+    var recoveryUl = $("pattern-recovery");
+    recoveryUl.innerHTML = (d.recovery_factors || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
+
+    var showMidPlus = (tier === "mid" || tier === "full");
+    $("pattern-drainers-wrap").hidden = !(showMidPlus && d.energy_drainers && d.energy_drainers.length);
+    $("pattern-recovery-wrap").hidden = !(showMidPlus && d.recovery_factors && d.recovery_factors.length);
+
+    $("pattern-hidden").textContent = d.hidden_insight || "";
+    $("pattern-hidden-wrap").hidden = !(tier === "full" && d.hidden_insight);
+  }
+
+  function handleRefreshPattern(){
+    var all = safeEntries();
+    if(all.length < 2) return;
+    hideError();
+    showLoading("最新の記録から「自分の取扱説明書」を作り直しています…");
+    callPattern(all).then(function(patternResult){
+      state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
+      persistPattern();
+      hideLoading();
+      renderPatternScreen();
+    }).catch(function(err){
+      hideLoading();
+      showError(err, handleRefreshPattern);
+    });
+  }
+
+  // ---------- history ----------
+  function renderHistory(){
+    var wrap = $("history-list");
+    var list = entriesDesc();
+    if(!list.length){
+      wrap.innerHTML = '<p class="hint-text">まだ記録がありません。</p>';
+      return;
+    }
+    wrap.innerHTML = list.map(function(e, idx){
+      var tags = (e.emotionTags && e.emotionTags.length) ? e.emotionTags.join("・") : "";
+      var label = e.safetyFlag ? "安全のため未分析" : (e.aiResult ? e.aiResult.today_label : "未分析");
+      var detail = e.safetyFlag
+        ? "<p>この日の記録は、安全のためAI分析を行っていません。</p>"
+        : "<p><b>出来事:</b> " + escapeHtml(e.event) + "</p>" +
+          "<p><b>気持ち:</b> " + escapeHtml(e.emotionText || "(未記入)") + "</p>" +
+          "<p><b>今日の自分へ:</b> " + escapeHtml(e.selfMessage) + "</p>" +
+          (e.aiResult ? "<p><b>気づき:</b> " + escapeHtml(e.aiResult.insight) + "</p><p><b>明日へ:</b> " + escapeHtml(e.aiResult.tomorrow_hint) + "</p>" : "");
+      return '<div class="history-item" data-idx="' + idx + '">' +
+        '<div class="hi-top"><span class="hi-date">' + escapeHtml(formatDateDisplay(e.date)) + '</span>' +
+        '<span class="hi-label">' + escapeHtml(label) + '</span></div>' +
+        (tags ? '<div class="hi-tags">' + escapeHtml(tags) + '</div>' : "") +
+        '<div class="history-detail">' + detail + '</div>' +
+        '</div>';
+    }).join("");
+
+    wrap.querySelectorAll(".history-item").forEach(function(item){
+      item.addEventListener("click", function(){
+        item.querySelector(".history-detail").classList.toggle("open");
+      });
+    });
+  }
+
+  // ---------- sample import ----------
+  function parseSampleDiary(text){
+    var blocks = text.split(/\n\s*\n+/).map(function(b){ return b.trim(); }).filter(Boolean);
+    var n = blocks.length;
+    return blocks.map(function(block, idx){
+      var lines = block.split("\n").map(function(l){ return l.trim(); }).filter(Boolean);
+      var date = null, rest = lines.slice();
+
+      var m1 = lines[0] && lines[0].match(/(\d{4})[-\/年.](\d{1,2})[-\/月.](\d{1,2})/);
+      var m2 = !m1 && lines[0] && lines[0].match(/^(\d{1,2})[\/月](\d{1,2})日?$/);
+      if(m1){
+        date = m1[1] + "-" + String(m1[2]).padStart(2,"0") + "-" + String(m1[3]).padStart(2,"0");
+        rest = lines.slice(1);
+      } else if(m2){
+        var y = new Date().getFullYear();
+        date = y + "-" + String(m2[1]).padStart(2,"0") + "-" + String(m2[2]).padStart(2,"0");
+        rest = lines.slice(1);
+      }
+
+      var event = "", emotionText = "", selfMessage = "";
+      var leftover = [];
+      rest.forEach(function(line){
+        var m;
+        if((m = line.match(/^(?:出来事|できごと|心に残った(?:こと)?)[:：]\s*(.+)$/))){ event = m[1]; }
+        else if((m = line.match(/^(?:気持ち|感情)[:：]\s*(.+)$/))){ emotionText = m[1]; }
+        else if((m = line.match(/^(?:ひとこと|自分(?:へ)?の?ひとこと|今日の自分(?:へ)?)[:：]\s*(.+)$/))){ selfMessage = m[1]; }
+        else { leftover.push(line); }
+      });
+      if(!event && !emotionText && !selfMessage && leftover.length){
+        event = leftover[0] || "";
+        emotionText = leftover[1] || "";
+        selfMessage = leftover.slice(2).join(" ") || "";
+      } else if(leftover.length){
+        if(!event){ event = leftover.shift() || event; }
+        if(!emotionText){ emotionText = leftover.shift() || emotionText; }
+        if(!selfMessage){ selfMessage = leftover.shift() || selfMessage; }
+      }
+      if(!date){
+        var base = new Date();
+        base.setDate(base.getDate() - (n - 1 - idx));
+        date = formatDateLocal(base);
+      }
+      return { date: date, event: event, emotionText: emotionText, emotionTags: [], selfMessage: selfMessage };
+    });
+  }
+
+  function renderImportPreview(){
+    var wrap = $("import-preview");
+    if(!state.importDraft.length){
+      wrap.innerHTML = "";
+      $("import-confirm-actions").hidden = true;
+      return;
+    }
+    wrap.innerHTML = "";
+    state.importDraft.forEach(function(item, idx){
+      var row = document.createElement("div");
+      row.className = "import-row";
+      row.innerHTML =
+        '<div class="ir-line"><label>日付</label><input type="date" data-field="date" value="' + escapeHtml(item.date) + '"></div>' +
+        '<div class="ir-line"><label>出来事</label><textarea rows="2" data-field="event">' + escapeHtml(item.event) + '</textarea></div>' +
+        '<div class="ir-line"><label>気持ち</label><input type="text" data-field="emotionText" value="' + escapeHtml(item.emotionText) + '"></div>' +
+        '<div class="ir-line"><label>ひとこと</label><textarea rows="2" data-field="selfMessage">' + escapeHtml(item.selfMessage) + '</textarea></div>' +
+        '<button type="button" class="ir-remove">この行を削除</button>';
+      row.querySelectorAll("[data-field]").forEach(function(input){
+        input.addEventListener("input", function(){
+          state.importDraft[idx][input.getAttribute("data-field")] = input.value;
+        });
+      });
+      row.querySelector(".ir-remove").addEventListener("click", function(){
+        state.importDraft.splice(idx, 1);
+        renderImportPreview();
+      });
+      wrap.appendChild(row);
+    });
+    $("import-confirm-actions").hidden = false;
+  }
+
+  function handleParseImport(){
+    var text = $("import-textarea").value;
+    if(!text.trim()) return;
+    state.importDraft = parseSampleDiary(text);
+    renderImportPreview();
+  }
+
+  function handleConfirmImport(){
+    hideError();
+    var valid = state.importDraft.filter(function(e){ return e.date && e.event.trim() && e.selfMessage.trim(); });
+    if(!valid.length){
+      showError(new Error("登録できる記録がありません。各行の出来事・ひとことを入力してください。"), null);
+      return;
+    }
+    if(!state.apiKey){
+      openSettings();
+      showError(new Error("APIキーを設定してから、もう一度「登録して分析する」を押してください。"), null);
+      return;
+    }
+
+    valid.forEach(function(e){
+      var combined = e.event + " " + e.emotionText + " " + e.selfMessage;
+      var entry = {
+        date: e.date, event: e.event.trim(), emotionText: e.emotionText.trim(),
+        emotionTags: [], selfMessage: e.selfMessage.trim(), aiResult: null,
+        safetyFlag: isUnsafeText(combined)
+      };
+      upsertEntry(entry);
+    });
+
+    var all = safeEntries();
+    if(!all.length){
+      hideLoading();
+      showScreen("history");
+      renderHistory();
+      return;
+    }
+    var lastDate = valid.map(function(e){ return e.date; }).sort().pop();
+    var lastEntry = all.find(function(e){ return e.date === lastDate; }) || all[all.length - 1];
+
+    showLoading("記録を読み込んでいます…");
+    var pastForLast = all.filter(function(e){ return e.date !== lastEntry.date; });
+
+    callToday(lastEntry, pastForLast, all.length).then(function(todayResult){
+      lastEntry.aiResult = todayResult;
+      upsertEntry(lastEntry);
+      if(all.length >= 2){
+        showLoading((all.length >= 7 ? "7日分の記録から" : all.length + "日分の記録から") + "「自分の取扱説明書」を作っています…");
+        return callPattern(all).then(function(patternResult){
+          state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
+          persistPattern();
+        });
+      }
+    }).then(function(){
+      hideLoading();
+      state.importDraft = [];
+      $("import-textarea").value = "";
+      renderImportPreview();
+      if(state.pattern){
+        renderPatternScreen();
+        showScreen("pattern");
+      } else {
+        renderResultScreen(lastEntry);
+        showScreen("result");
+      }
+    }).catch(function(err){
+      hideLoading();
+      showError(err, handleConfirmImport);
+    });
+  }
+
+  // ---------- wiring ----------
+  function init(){
+    loadState();
+    prefillHomeForm();
+
+    $("btn-settings").addEventListener("click", openSettings);
+    $("btn-close-settings").addEventListener("click", closeSettings);
+    $("btn-save-settings").addEventListener("click", function(){
+      state.apiKey = $("input-api-key").value.trim();
+      state.model = $("input-model").value.trim() || DEFAULT_MODEL;
+      persistModel();
+      closeSettings();
+      $("apikey-hint").hidden = !!state.apiKey;
+    });
+
+    $("form-today").addEventListener("submit", function(e){ e.preventDefault(); handleSubmitToday(); });
+    $("btn-regenerate").addEventListener("click", handleRegenerate);
+    $("btn-see-pattern").addEventListener("click", function(){ renderPatternScreen(); showScreen("pattern"); });
+    $("btn-result-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+
+    $("btn-refresh-pattern").addEventListener("click", handleRefreshPattern);
+    $("btn-pattern-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+
+    $("btn-history-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+    $("btn-safety-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+
+    $("btn-goto-pattern").addEventListener("click", function(){ renderPatternScreen(); showScreen("pattern"); });
+    $("btn-goto-history").addEventListener("click", function(){ renderHistory(); showScreen("history"); });
+    $("btn-goto-import").addEventListener("click", function(){ showScreen("import"); });
+    $("btn-import-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+
+    $("btn-parse-import").addEventListener("click", handleParseImport);
+    $("btn-confirm-import").addEventListener("click", handleConfirmImport);
+
+    $("btn-error-dismiss").addEventListener("click", hideError);
+    $("btn-error-retry").addEventListener("click", function(){
+      var fn = state.lastFailedAction;
+      hideError();
+      if(fn) fn();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
