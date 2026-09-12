@@ -811,6 +811,13 @@
     });
   }
 
+  // 「ホームに戻る」は常に今日の日付・空欄の新規状態にする(過去日付の入力を持ち越さない)
+  function goHome(){
+    state.selectedDate = todayStr();
+    prefillHomeForm();
+    showScreen("home");
+  }
+
   function prefillHomeForm(){
     $("input-home-date").value = state.selectedDate;
     var existing = state.entries.find(function(e){ return e.date === state.selectedDate; });
@@ -1400,18 +1407,18 @@
     $("form-today").addEventListener("submit", function(e){ e.preventDefault(); handleSubmitToday(); });
     $("btn-regenerate").addEventListener("click", handleRegenerate);
     $("btn-see-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); });
-    $("btn-result-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+    $("btn-result-home").addEventListener("click", goHome);
 
     $("btn-refresh-pattern").addEventListener("click", handleRefreshPattern);
-    $("btn-pattern-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+    $("btn-pattern-home").addEventListener("click", goHome);
 
-    $("btn-history-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
-    $("btn-safety-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+    $("btn-history-home").addEventListener("click", goHome);
+    $("btn-safety-home").addEventListener("click", goHome);
 
     $("btn-goto-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); });
     $("btn-goto-history").addEventListener("click", function(){ renderHistory(); showScreen("history"); });
     $("btn-goto-import").addEventListener("click", function(){ showScreen("import"); });
-    $("btn-import-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
+    $("btn-import-home").addEventListener("click", goHome);
 
     $("btn-parse-import").addEventListener("click", handleParseImport);
     $("btn-confirm-import").addEventListener("click", handleConfirmImport);
