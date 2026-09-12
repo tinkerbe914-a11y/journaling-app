@@ -137,7 +137,9 @@
   .result-card h3{margin:0 0 8px;font-size:14px;color:var(--accent-2);font-weight:700;}
   .result-card p{margin:0;font-size:15px;color:var(--text);}
   .result-card ul{margin:0;padding-left:20px;}
-  .result-card li{margin-bottom:6px;font-size:14.5px;}
+  .result-card li{margin-bottom:8px;font-size:14.5px;}
+  .result-card li strong{color:var(--text);}
+  .pattern-evidence{display:block;color:var(--text-dim);font-size:12.5px;margin-top:2px;line-height:1.5;}
   .result-card.highlight{
     background:linear-gradient(135deg,rgba(242,184,128,.14),rgba(138,182,249,.08));
     border-color:var(--accent-dim);text-align:center;
@@ -318,21 +320,15 @@
     <!-- IMPORT -->
     <section id="screen-import" class="screen">
       <h2 class="screen-title">サンプル日記 一括読み込み</h2>
-      <p class="tagline">日付ごとに空行で区切って貼り付けてください。「出来事」「気持ち」「ひとこと」のラベルがあると自動で認識されます。</p>
+      <p class="tagline">日付から書き始めた日記を、そのままの文章で貼り付けてください。空行で区切らなくても、日付ごとに自動で分割されます。</p>
       <details class="format-example">
         <summary>入力例を見る</summary>
-        <pre>2026-08-01
-出来事: 後輩との打ち合わせが長引いた
-気持ち: 疲れた、モヤモヤ
-ひとこと: 疲れていたけど頑張れた
-
-2026-08-02
-出来事: ジムで新しいメニューに挑戦した
-気持ち: 達成感
-ひとこと: 継続できている自分を褒めたい</pre>
+        <pre>6/2（月） 今日から新しいプロジェクトが本格始動。朝から会議が続いて、気づいたら退勤が22時過ぎ。ジムは行けなかった。疲れた。
+6/3（火） 資料の詰めが甘くて、部長にやり直しを指示された。忙しく動いてはいるけど、成長してるのか、ただ回してるだけなのか分からなくなる。
+6/4（水） 疲れてたけど、無理やりジムへ。1時間動いたら頭の中の霧が少し晴れた感じ。</pre>
       </details>
       <div class="field">
-        <textarea id="import-textarea" rows="8" placeholder="ここにサンプル日記を貼り付けてください"></textarea>
+        <textarea id="import-textarea" rows="10" placeholder="ここにサンプル日記を貼り付けてください"></textarea>
       </div>
       <button class="btn-secondary" id="btn-parse-import">解析する</button>
       <div id="import-preview"></div>
@@ -413,6 +409,9 @@
   ];
 
   var MUSIC_VOLUME_KEY = "bedtimeJournal.musicVolume.v1";
+  var SAMPLE_ENTRIES_KEY = "bedtimeJournal.sampleEntries.v1";
+  var SAMPLE_PATTERN_KEY = "bedtimeJournal.samplePattern.v1";
+  var MAX_PATTERN_ENTRIES = 14;
 
   var state = {
     entries: [],
@@ -425,7 +424,11 @@
     audioCtx: null,
     musicNodes: null,
     musicPlaying: false,
-    musicVolume: 0.35
+    musicVolume: 0.35,
+    // サンプル日記は通常の日記履歴(entries/pattern)とは完全に分離して保持する
+    sampleEntries: [],
+    samplePattern: null,
+    activePatternSource: "normal"
   };
 
   function $(id){ return document.getElementById(id); }
@@ -462,6 +465,14 @@
       var v = localStorage.getItem(MUSIC_VOLUME_KEY);
       state.musicVolume = v !== null ? parseFloat(v) : 0.35;
     }catch(err){ state.musicVolume = 0.35; }
+    try{
+      var se = localStorage.getItem(SAMPLE_ENTRIES_KEY);
+      state.sampleEntries = se ? JSON.parse(se) : [];
+    }catch(err){ state.sampleEntries = []; }
+    try{
+      var sp = localStorage.getItem(SAMPLE_PATTERN_KEY);
+      state.samplePattern = sp ? JSON.parse(sp) : null;
+    }catch(err){ state.samplePattern = null; }
   }
   function persistEntries(){ localStorage.setItem(ENTRIES_KEY, JSON.stringify(state.entries)); }
   function persistPattern(){
@@ -470,6 +481,18 @@
   }
   function persistModel(){ localStorage.setItem(MODEL_KEY, state.model); }
   function persistMusicVolume(){ localStorage.setItem(MUSIC_VOLUME_KEY, String(state.musicVolume)); }
+  function persistSampleEntries(){ localStorage.setItem(SAMPLE_ENTRIES_KEY, JSON.stringify(state.sampleEntries)); }
+  function persistSamplePattern(){
+    if(state.samplePattern) localStorage.setItem(SAMPLE_PATTERN_KEY, JSON.stringify(state.samplePattern));
+    else localStorage.removeItem(SAMPLE_PATTERN_KEY);
+  }
+
+  function sortByDateAsc(entries){
+    return entries.slice().sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  }
+  function capForPattern(entries){
+    return sortByDateAsc(entries).slice(-MAX_PATTERN_ENTRIES);
+  }
 
   function upsertEntry(entry){
     var idx = state.entries.findIndex(function(e){ return e.date === entry.date; });
@@ -534,7 +557,7 @@
     "5. 同じ言い回しを繰り返さず、その日・その人の入力に即した表現にする。",
     "6. 1つのセクションを長文にしすぎず、疲れている夜でも読める分量にする。",
     "7.「頑張りましょう」のような一般的な励ましだけで終わらせない。命令や説教もしない。",
-    "8. 根拠が弱い場合は「〜かもしれません」「〜の傾向がありそうです」のように断定を避けた表現にする。",
+    "8. 根拠が弱い場合は「〜かもしれません」「〜という傾向がありそうです」「記録を見る限りでは〜」のように断定を避けた表現にする。",
     "9. 心理診断や医療的判断は行わない。",
     "10. 入力にない事実を作らない。",
     "必ず指定されたツールを1回呼び出し、指定フィールドのみを日本語で埋めて回答してください。"
@@ -582,33 +605,86 @@
     ].join("\n");
   }
 
-  function buildPatternUserPrompt(allEntries){
-    var sorted = allEntries.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; }).slice(-14);
+  // 複数日パターン分析では、AI自身が過去に生成したinsight/patternを根拠として渡さず、
+  // 本人が書いた一次情報(日付・出来事・感情・ひとこと、またはサンプルの日記本文そのもの)だけを渡す。
+  var PATTERN_ANALYSIS_ANGLES = [
+    "- 同じ感情や状況が繰り返し現れる場面",
+    "- 気持ちが回復した、または切り替わったきっかけ",
+    "- 週の前半と後半など、時間経過による変化",
+    "- 本人が「うまくいっていない」と感じていることと、実際の行動・出来事とのズレ",
+    "- 本人自身がまだ気づいていない可能性のあるつながり(例: 別々の日付に書かれた出来事同士の関連)",
+    "- 本人が今後も続けたいと書いている小さな行動",
+    "- ネガティブな要因だけでなく、本人が既にできていること"
+  ].join("\n");
+
+  var PATTERN_PROHIBITIONS = [
+    "- 一般論だけで終わらない",
+    "- 入力にない事実を作らない",
+    "- 心理診断・医療的な判断は絶対に行わない",
+    "-「あなたは〜な人です」のような人格の断定をしない",
+    "- 断定を避け、「〜かもしれません」「〜という傾向がありそうです」「記録を見る限りでは〜」のような表現を使う",
+    "- ネガティブな内容だけで終わらせない"
+  ].join("\n");
+
+  var PATTERN_TOOL_INSTRUCTION = [
+    "上記を踏まえ、submit_pattern_analysis ツールを1回呼び出して結果を送信してください。",
+    "energy_drainers・recovery_factors・changes は、それぞれ根拠のあるものだけを1〜3個程度の配列で返してください。根拠が無ければ空配列にしてください。",
+    "各要素の title は短い見出し、evidence には具体的な日付と本人の記録内容を短く引用・要約した根拠を必ず含めてください(例: 「6/4には『頭の中の霧が少し晴れた』、6/8にも調子が良かったと記録されています」)。",
+    "recent_pattern と hidden_insight も、可能な範囲で根拠となる日付に触れながら100〜160字程度でまとめてください。",
+    "特に、別々の日付に書かれた内容同士を関連づけ、1日分だけを読んでも分からない気づきを重視してください。"
+  ].join("\n");
+
+  function patternLinesFromEntries(entries){
+    if(!entries.length) return "(記録なし)";
+    return entries.map(function(e){
+      var tags = (e.emotionTags && e.emotionTags.length) ? e.emotionTags.join("・") : "なし";
+      return "- " + e.date + " | 出来事: " + e.event + " | 感情: " + (e.emotionText || "(未記入)") +
+        " | 感情タグ: " + tags + " | 本人のひとこと: " + e.selfMessage;
+    }).join("\n");
+  }
+
+  function patternLinesFromRawEntries(entries){
+    if(!entries.length) return "(記録なし)";
+    return entries.map(function(e){
+      return "- " + e.date + " の記録:\n" + e.rawText;
+    }).join("\n\n");
+  }
+
+  function buildPatternUserPrompt(entries){
     return [
       "[ユーザー情報]",
       "- 想定ユーザー: 忙しい社会人",
-      "- 記録日数: " + allEntries.length + "日",
+      "- 記録日数: " + entries.length + "日",
       "",
-      "[記録一覧(日付昇順)]",
-      historyContextLines(sorted),
+      "[記録一覧(日付昇順・本人が書いた一次情報のみ。AIによる過去の解釈は含めない)]",
+      patternLinesFromEntries(entries),
       "",
       "[分析してほしい観点]",
-      "- 同じ感情や状況が出やすい場面",
-      "- 回復や気持ちの切り替えにつながった行動",
-      "- 最近増えている、または減っている要素",
-      "- 複数日にまたがる変化",
-      "- 繰り返し起きているパターン",
-      "- 本人の自己評価と実際の行動・出来事とのズレで、本人がまだ気づいていなさそうなもの",
+      PATTERN_ANALYSIS_ANGLES,
       "",
       "[禁止事項]",
-      "- 一般論だけで終わらない",
-      "- 入力にない事実を作らない",
-      "- 心理診断をしない",
-      "- 強く断定しない(「〜の傾向がありそうです」のような表現を使う)",
-      "- ネガティブな内容だけで終わらせない",
+      PATTERN_PROHIBITIONS,
       "",
-      "上記を踏まえ、submit_pattern_analysis ツールを1回呼び出して結果を送信してください。",
-      "energy_drainers・recovery_factors・changes は、それぞれ根拠のあるものだけを1〜3個程度の配列で返してください。根拠が無ければ空配列にしてください。"
+      PATTERN_TOOL_INSTRUCTION
+    ].join("\n");
+  }
+
+  function buildSamplePatternUserPrompt(entries){
+    return [
+      "[ユーザー情報]",
+      "- 想定ユーザー: 忙しい社会人",
+      "- 記録日数: " + entries.length + "日",
+      "",
+      "[記録一覧(日付昇順・本人が書いた日記本文そのもの。AIによる解釈は含めない)]",
+      patternLinesFromRawEntries(entries),
+      "",
+      "[分析してほしい観点]",
+      PATTERN_ANALYSIS_ANGLES,
+      "",
+      "[禁止事項]",
+      PATTERN_PROHIBITIONS,
+      "",
+      PATTERN_TOOL_INSTRUCTION
     ].join("\n");
   }
 
@@ -626,17 +702,26 @@
     }
   };
 
+  var PATTERN_ITEM_SCHEMA = {
+    type: "object",
+    properties: {
+      title: { type: "string", description: "短い見出し(15字程度)" },
+      evidence: { type: "string", description: "具体的な日付と本人の記録内容を短く含めた根拠(60字程度)" }
+    },
+    required: ["title", "evidence"]
+  };
+
   var PATTERN_TOOL = {
     name: "submit_pattern_analysis",
-    description: "複数日の記録から見えるパターンを送信する",
+    description: "複数日の記録から見えるパターンを、根拠となる日付とともに送信する",
     input_schema: {
       type: "object",
       properties: {
-        recent_pattern: { type: "string", description: "最近の傾向を短くまとめた文章" },
-        energy_drainers: { type: "array", items: { type: "string" }, description: "本人を消耗させやすい要因。根拠のあるものだけ" },
-        recovery_factors: { type: "array", items: { type: "string" }, description: "本人を整えている・回復させている要因" },
-        changes: { type: "array", items: { type: "string" }, description: "複数日で見える変化" },
-        hidden_insight: { type: "string", description: "本人がまだ気づいていない可能性のある気づき" }
+        recent_pattern: { type: "string", description: "最近の傾向を短くまとめた文章。可能なら根拠となる日付に触れる" },
+        energy_drainers: { type: "array", items: PATTERN_ITEM_SCHEMA, description: "本人を消耗させやすい要因。根拠のあるものだけ" },
+        recovery_factors: { type: "array", items: PATTERN_ITEM_SCHEMA, description: "本人を整えている・回復させている要因" },
+        changes: { type: "array", items: PATTERN_ITEM_SCHEMA, description: "複数日で見える変化" },
+        hidden_insight: { type: "string", description: "本人がまだ気づいていない可能性のある、日をまたいだ気づき" }
       },
       required: ["recent_pattern", "energy_drainers", "recovery_factors", "changes", "hidden_insight"]
     }
@@ -694,8 +779,11 @@
   function callToday(entry, pastEntries, totalCount){
     return callClaude(buildTodayUserPrompt(entry, pastEntries, totalCount), TODAY_TOOL);
   }
-  function callPattern(allEntries){
-    return callClaude(buildPatternUserPrompt(allEntries), PATTERN_TOOL);
+  function callPattern(entries){
+    return callClaude(buildPatternUserPrompt(entries), PATTERN_TOOL);
+  }
+  function callSamplePattern(entries){
+    return callClaude(buildSamplePatternUserPrompt(entries), PATTERN_TOOL);
   }
 
   // ---------- home / form ----------
@@ -789,8 +877,9 @@
       var all = safeEntries();
       if(all.length >= 2){
         showLoading("過去の記録と照らし合わせています…");
-        return callPattern(all).then(function(patternResult){
-          state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
+        var forPattern = capForPattern(all);
+        return callPattern(forPattern).then(function(patternResult){
+          state.pattern = { basedOnCount: forPattern.length, generatedAt: new Date().toISOString(), data: patternResult };
           persistPattern();
         });
       }
@@ -852,32 +941,46 @@
     return "none";
   }
 
+  function currentPatternRecord(){
+    return state.activePatternSource === "sample" ? state.samplePattern : state.pattern;
+  }
+
+  function renderEvidenceList(ul, items){
+    items = items || [];
+    ul.innerHTML = items.map(function(item){
+      if(item && typeof item === "object"){
+        var title = item.title || "";
+        var evidence = item.evidence || "";
+        return "<li><strong>" + escapeHtml(title) + "</strong>" +
+          (evidence ? '<span class="pattern-evidence">' + escapeHtml(evidence) + "</span>" : "") + "</li>";
+      }
+      return "<li>" + escapeHtml(item) + "</li>";
+    }).join("");
+  }
+
   function renderPatternScreen(){
-    if(!state.pattern){
+    var record = currentPatternRecord();
+    if(!record){
       showError(new Error("記録がまだ足りないため、自分の取扱説明書はまだ表示できません。2日以上記録すると表示されます。"), null);
       showScreen("home");
       return;
     }
-    var n = state.pattern.basedOnCount;
+    var n = record.basedOnCount;
     var tier = tierForCount(n);
-    var d = state.pattern.data;
+    var d = record.data;
 
     $("pattern-title").textContent = tier === "full" ? n + "日間のあなた" :
       tier === "mid" ? "最近のあなた" : "少しずつ見えてきたこと";
-    $("pattern-meta").textContent = "直近" + n + "日分の記録をもとにしています";
+    $("pattern-meta").textContent = n + "日分の記録をもとにしています";
 
     $("pattern-recent").textContent = d.recent_pattern || "";
     $("pattern-recent-wrap").hidden = false;
 
-    var changesUl = $("pattern-changes");
-    changesUl.innerHTML = (d.changes || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
+    renderEvidenceList($("pattern-changes"), d.changes);
     $("pattern-changes-wrap").hidden = !(d.changes && d.changes.length);
 
-    var drainersUl = $("pattern-drainers");
-    drainersUl.innerHTML = (d.energy_drainers || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
-    var recoveryUl = $("pattern-recovery");
-    recoveryUl.innerHTML = (d.recovery_factors || []).map(function(c){ return "<li>" + escapeHtml(c) + "</li>"; }).join("");
-
+    renderEvidenceList($("pattern-drainers"), d.energy_drainers);
+    renderEvidenceList($("pattern-recovery"), d.recovery_factors);
     var showMidPlus = (tier === "mid" || tier === "full");
     $("pattern-drainers-wrap").hidden = !(showMidPlus && d.energy_drainers && d.energy_drainers.length);
     $("pattern-recovery-wrap").hidden = !(showMidPlus && d.recovery_factors && d.recovery_factors.length);
@@ -887,13 +990,35 @@
   }
 
   function handleRefreshPattern(){
+    if(state.activePatternSource === "sample"){
+      handleRefreshSamplePattern();
+      return;
+    }
     var all = safeEntries();
     if(all.length < 2) return;
     hideError();
     showLoading("最新の記録から「自分の取扱説明書」を作り直しています…");
-    callPattern(all).then(function(patternResult){
-      state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
+    var forPattern = capForPattern(all);
+    callPattern(forPattern).then(function(patternResult){
+      state.pattern = { basedOnCount: forPattern.length, generatedAt: new Date().toISOString(), data: patternResult };
       persistPattern();
+      hideLoading();
+      renderPatternScreen();
+    }).catch(function(err){
+      hideLoading();
+      showError(err, handleRefreshPattern);
+    });
+  }
+
+  function handleRefreshSamplePattern(){
+    var safe = state.sampleEntries.filter(function(e){ return !e.safetyFlag; });
+    if(!safe.length) return;
+    hideError();
+    showLoading("サンプル記録から「自分の取扱説明書」を作り直しています…");
+    var forPattern = capForPattern(safe);
+    callSamplePattern(forPattern).then(function(patternResult){
+      state.samplePattern = { basedOnCount: forPattern.length, generatedAt: new Date().toISOString(), data: patternResult };
+      persistSamplePattern();
       hideLoading();
       renderPatternScreen();
     }).catch(function(err){
@@ -935,49 +1060,47 @@
   }
 
   // ---------- sample import ----------
-  function parseSampleDiary(text){
+  // 運営提供サンプルのような「日付から書き始めた自由記述の日記」を、空行がなくても
+  // 日付ごとに分割する。3項目(出来事/気持ち/ひとこと)への強制分解は行わず、
+  // { date, rawText } のまま保持する。
+  var DATE_LINE_RE = /^[ \t]*(?:(\d{4})\s*[\/年])?(\d{1,2})\s*[\/月]\s*(\d{1,2})\s*日?(?:\s*[（(][^）()\n]{0,4}[）)])?[ \t]*/gm;
+
+  function extractDateBlocks(text){
+    var matches = [];
+    var m;
+    DATE_LINE_RE.lastIndex = 0;
+    while((m = DATE_LINE_RE.exec(text)) !== null){
+      var month = parseInt(m[2], 10);
+      var day = parseInt(m[3], 10);
+      if(month >= 1 && month <= 12 && day >= 1 && day <= 31){
+        matches.push({ index: m.index, endIndex: DATE_LINE_RE.lastIndex, year: m[1], month: m[2], day: m[3] });
+      }
+    }
+    if(!matches.length) return [];
+    return matches.map(function(cur, i){
+      var start = cur.endIndex;
+      var end = (i + 1 < matches.length) ? matches[i + 1].index : text.length;
+      var rawText = text.slice(start, end).trim();
+      var year = cur.year || "2026";
+      var date = year + "-" + cur.month.padStart(2, "0") + "-" + cur.day.padStart(2, "0");
+      return { date: date, rawText: rawText };
+    });
+  }
+
+  function fallbackBlankLineBlocks(text){
     var blocks = text.split(/\n\s*\n+/).map(function(b){ return b.trim(); }).filter(Boolean);
     var n = blocks.length;
     return blocks.map(function(block, idx){
-      var lines = block.split("\n").map(function(l){ return l.trim(); }).filter(Boolean);
-      var date = null, rest = lines.slice();
-
-      var m1 = lines[0] && lines[0].match(/(\d{4})[-\/年.](\d{1,2})[-\/月.](\d{1,2})/);
-      var m2 = !m1 && lines[0] && lines[0].match(/^(\d{1,2})[\/月](\d{1,2})日?$/);
-      if(m1){
-        date = m1[1] + "-" + String(m1[2]).padStart(2,"0") + "-" + String(m1[3]).padStart(2,"0");
-        rest = lines.slice(1);
-      } else if(m2){
-        var y = new Date().getFullYear();
-        date = y + "-" + String(m2[1]).padStart(2,"0") + "-" + String(m2[2]).padStart(2,"0");
-        rest = lines.slice(1);
-      }
-
-      var event = "", emotionText = "", selfMessage = "";
-      var leftover = [];
-      rest.forEach(function(line){
-        var m;
-        if((m = line.match(/^(?:出来事|できごと|心に残った(?:こと)?)[:：]\s*(.+)$/))){ event = m[1]; }
-        else if((m = line.match(/^(?:気持ち|感情)[:：]\s*(.+)$/))){ emotionText = m[1]; }
-        else if((m = line.match(/^(?:ひとこと|自分(?:へ)?の?ひとこと|今日の自分(?:へ)?)[:：]\s*(.+)$/))){ selfMessage = m[1]; }
-        else { leftover.push(line); }
-      });
-      if(!event && !emotionText && !selfMessage && leftover.length){
-        event = leftover[0] || "";
-        emotionText = leftover[1] || "";
-        selfMessage = leftover.slice(2).join(" ") || "";
-      } else if(leftover.length){
-        if(!event){ event = leftover.shift() || event; }
-        if(!emotionText){ emotionText = leftover.shift() || emotionText; }
-        if(!selfMessage){ selfMessage = leftover.shift() || selfMessage; }
-      }
-      if(!date){
-        var base = new Date();
-        base.setDate(base.getDate() - (n - 1 - idx));
-        date = formatDateLocal(base);
-      }
-      return { date: date, event: event, emotionText: emotionText, emotionTags: [], selfMessage: selfMessage };
+      var base = new Date();
+      base.setDate(base.getDate() - (n - 1 - idx));
+      return { date: formatDateLocal(base), rawText: block };
     });
+  }
+
+  function parseSampleDiary(text){
+    var dateBlocks = extractDateBlocks(text);
+    if(dateBlocks.length) return dateBlocks;
+    return fallbackBlankLineBlocks(text);
   }
 
   function renderImportPreview(){
@@ -993,9 +1116,7 @@
       row.className = "import-row";
       row.innerHTML =
         '<div class="ir-line"><label>日付</label><input type="date" data-field="date" value="' + escapeHtml(item.date) + '"></div>' +
-        '<div class="ir-line"><label>出来事</label><textarea rows="2" data-field="event">' + escapeHtml(item.event) + '</textarea></div>' +
-        '<div class="ir-line"><label>気持ち</label><input type="text" data-field="emotionText" value="' + escapeHtml(item.emotionText) + '"></div>' +
-        '<div class="ir-line"><label>ひとこと</label><textarea rows="2" data-field="selfMessage">' + escapeHtml(item.selfMessage) + '</textarea></div>' +
+        '<div class="ir-line"><label>日記本文</label><textarea rows="4" data-field="rawText">' + escapeHtml(item.rawText) + '</textarea></div>' +
         '<button type="button" class="ir-remove">この行を削除</button>';
       row.querySelectorAll("[data-field]").forEach(function(input){
         input.addEventListener("input", function(){
@@ -1018,11 +1139,13 @@
     renderImportPreview();
   }
 
+  // サンプル分析は state.sampleEntries のみを対象にし、通常の日記履歴(state.entries)や
+  // localStorageに残っている過去のテストデータとは一切混ぜない。
   function handleConfirmImport(){
     hideError();
-    var valid = state.importDraft.filter(function(e){ return e.date && e.event.trim() && e.selfMessage.trim(); });
+    var valid = state.importDraft.filter(function(e){ return e.date && e.rawText && e.rawText.trim(); });
     if(!valid.length){
-      showError(new Error("登録できる記録がありません。各行の出来事・ひとことを入力してください。"), null);
+      showError(new Error("登録できる記録がありません。日付と日記本文を入力してください。"), null);
       return;
     }
     if(!state.apiKey){
@@ -1031,51 +1154,32 @@
       return;
     }
 
-    valid.forEach(function(e){
-      var combined = e.event + " " + e.emotionText + " " + e.selfMessage;
-      var entry = {
-        date: e.date, event: e.event.trim(), emotionText: e.emotionText.trim(),
-        emotionTags: [], selfMessage: e.selfMessage.trim(), aiResult: null,
-        safetyFlag: isUnsafeText(combined)
-      };
-      upsertEntry(entry);
-    });
+    var sample = sortByDateAsc(valid.map(function(e){
+      var rawText = e.rawText.trim();
+      return { date: e.date, rawText: rawText, safetyFlag: isUnsafeText(rawText) };
+    }));
+    state.sampleEntries = sample;
+    persistSampleEntries();
 
-    var all = safeEntries();
-    if(!all.length){
-      hideLoading();
-      showScreen("history");
-      renderHistory();
+    var safe = sample.filter(function(e){ return !e.safetyFlag; });
+    if(!safe.length){
+      showSafetyScreen();
       return;
     }
-    var lastDate = valid.map(function(e){ return e.date; }).sort().pop();
-    var lastEntry = all.find(function(e){ return e.date === lastDate; }) || all[all.length - 1];
 
-    showLoading("記録を読み込んでいます…");
-    var pastForLast = all.filter(function(e){ return e.date !== lastEntry.date; });
+    var forPattern = capForPattern(safe);
+    showLoading(forPattern.length + "日分の記録から「自分の取扱説明書」を作っています…");
 
-    callToday(lastEntry, pastForLast, all.length).then(function(todayResult){
-      lastEntry.aiResult = todayResult;
-      upsertEntry(lastEntry);
-      if(all.length >= 2){
-        showLoading((all.length >= 7 ? "7日分の記録から" : all.length + "日分の記録から") + "「自分の取扱説明書」を作っています…");
-        return callPattern(all).then(function(patternResult){
-          state.pattern = { basedOnCount: all.length, generatedAt: new Date().toISOString(), data: patternResult };
-          persistPattern();
-        });
-      }
-    }).then(function(){
+    callSamplePattern(forPattern).then(function(patternResult){
+      state.samplePattern = { basedOnCount: forPattern.length, generatedAt: new Date().toISOString(), data: patternResult };
+      persistSamplePattern();
+      state.activePatternSource = "sample";
       hideLoading();
       state.importDraft = [];
       $("import-textarea").value = "";
       renderImportPreview();
-      if(state.pattern){
-        renderPatternScreen();
-        showScreen("pattern");
-      } else {
-        renderResultScreen(lastEntry);
-        showScreen("result");
-      }
+      renderPatternScreen();
+      showScreen("pattern");
     }).catch(function(err){
       hideLoading();
       showError(err, handleConfirmImport);
@@ -1247,7 +1351,7 @@
 
     $("form-today").addEventListener("submit", function(e){ e.preventDefault(); handleSubmitToday(); });
     $("btn-regenerate").addEventListener("click", handleRegenerate);
-    $("btn-see-pattern").addEventListener("click", function(){ renderPatternScreen(); showScreen("pattern"); });
+    $("btn-see-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); showScreen("pattern"); });
     $("btn-result-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
 
     $("btn-refresh-pattern").addEventListener("click", handleRefreshPattern);
@@ -1256,7 +1360,7 @@
     $("btn-history-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
     $("btn-safety-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
 
-    $("btn-goto-pattern").addEventListener("click", function(){ renderPatternScreen(); showScreen("pattern"); });
+    $("btn-goto-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); showScreen("pattern"); });
     $("btn-goto-history").addEventListener("click", function(){ renderHistory(); showScreen("history"); });
     $("btn-goto-import").addEventListener("click", function(){ showScreen("import"); });
     $("btn-import-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
