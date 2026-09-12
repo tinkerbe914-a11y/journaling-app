@@ -967,6 +967,14 @@
   function renderPatternScreen(){
     var record = currentPatternRecord();
     if(!record){
+      var count = state.activePatternSource === "sample"
+        ? state.sampleEntries.filter(function(e){ return !e.safetyFlag; }).length
+        : safeEntries().length;
+      if(count >= 2){
+        // 記録はあるが、削除などで分析結果が古くなった/失われた場合は自動で作り直す
+        handleRefreshPattern();
+        return;
+      }
       showError(new Error("記録がまだ足りないため、自分の取扱説明書はまだ表示できません。2日以上記録すると表示されます。"), null);
       showScreen("home");
       return;
@@ -993,6 +1001,8 @@
 
     $("pattern-hidden").textContent = d.hidden_insight || "";
     $("pattern-hidden-wrap").hidden = !(tier === "full" && d.hidden_insight);
+
+    showScreen("pattern");
   }
 
   function handleRefreshPattern(){
@@ -1001,7 +1011,13 @@
       return;
     }
     var all = safeEntries();
-    if(all.length < 2) return;
+    if(all.length < 2){
+      state.pattern = null;
+      persistPattern();
+      showError(new Error("記録が2日分未満のため、自分の取扱説明書を作成できません。まず日記を記録してください。"), null);
+      showScreen("home");
+      return;
+    }
     hideError();
     showLoading("最新の記録から「自分の取扱説明書」を作り直しています…");
     var forPattern = capForPattern(all);
@@ -1018,7 +1034,13 @@
 
   function handleRefreshSamplePattern(){
     var safe = state.sampleEntries.filter(function(e){ return !e.safetyFlag; });
-    if(!safe.length) return;
+    if(!safe.length){
+      state.samplePattern = null;
+      persistSamplePattern();
+      showError(new Error("サンプルの記録がありません。サンプル読み込みからやり直してください。"), null);
+      showScreen("home");
+      return;
+    }
     hideError();
     showLoading("サンプル記録から「自分の取扱説明書」を作り直しています…");
     var forPattern = capForPattern(safe);
@@ -1073,6 +1095,9 @@
         if(!window.confirm(formatDateDisplay(date) + "の記録を削除します。よろしいですか?")) return;
         state.entries = state.entries.filter(function(en){ return en.date !== date; });
         persistEntries();
+        // 削除した記録を根拠に含んでいる可能性があるため、キャッシュ済みの「自分の取扱説明書」は無効化する
+        state.pattern = null;
+        persistPattern();
         renderHistory();
       });
     });
@@ -1198,7 +1223,6 @@
       $("import-textarea").value = "";
       renderImportPreview();
       renderPatternScreen();
-      showScreen("pattern");
     }).catch(function(err){
       hideLoading();
       showError(err, handleConfirmImport);
@@ -1375,7 +1399,7 @@
 
     $("form-today").addEventListener("submit", function(e){ e.preventDefault(); handleSubmitToday(); });
     $("btn-regenerate").addEventListener("click", handleRegenerate);
-    $("btn-see-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); showScreen("pattern"); });
+    $("btn-see-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); });
     $("btn-result-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
 
     $("btn-refresh-pattern").addEventListener("click", handleRefreshPattern);
@@ -1384,7 +1408,7 @@
     $("btn-history-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
     $("btn-safety-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
 
-    $("btn-goto-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); showScreen("pattern"); });
+    $("btn-goto-pattern").addEventListener("click", function(){ state.activePatternSource = "normal"; renderPatternScreen(); });
     $("btn-goto-history").addEventListener("click", function(){ renderHistory(); showScreen("history"); });
     $("btn-goto-import").addEventListener("click", function(){ showScreen("import"); });
     $("btn-import-home").addEventListener("click", function(){ prefillHomeForm(); showScreen("home"); });
