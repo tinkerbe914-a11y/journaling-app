@@ -160,6 +160,7 @@
   .history-item .hi-date{font-size:12.5px;color:var(--text-dim);}
   .history-item .hi-label{font-size:14.5px;font-weight:700;color:var(--accent);}
   .history-item .hi-tags{font-size:12px;color:var(--text-dim);margin-top:4px;}
+  .hi-delete{color:var(--danger);background:none;border:none;font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0;margin-top:10px;display:inline-block;}
   .history-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--card-border);font-size:13.5px;color:var(--text-dim);display:none;}
   .history-detail.open{display:block;}
   .history-detail p{margin:0 0 8px;}
@@ -1053,13 +1054,26 @@
         '<div class="hi-top"><span class="hi-date">' + escapeHtml(formatDateDisplay(e.date)) + '</span>' +
         '<span class="hi-label">' + escapeHtml(label) + '</span></div>' +
         (tags ? '<div class="hi-tags">' + escapeHtml(tags) + '</div>' : "") +
-        '<div class="history-detail">' + detail + '</div>' +
+        '<div class="history-detail">' + detail +
+          '<button type="button" class="hi-delete" data-date="' + escapeHtml(e.date) + '">この記録を削除</button>' +
+        '</div>' +
         '</div>';
     }).join("");
 
     wrap.querySelectorAll(".history-item").forEach(function(item){
       item.addEventListener("click", function(){
         item.querySelector(".history-detail").classList.toggle("open");
+      });
+    });
+
+    wrap.querySelectorAll(".hi-delete").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        var date = btn.getAttribute("data-date");
+        if(!window.confirm(formatDateDisplay(date) + "の記録を削除します。よろしいですか?")) return;
+        state.entries = state.entries.filter(function(en){ return en.date !== date; });
+        persistEntries();
+        renderHistory();
       });
     });
   }
