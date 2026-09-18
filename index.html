@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYA IMAJO | Design Portfolio</title>
+  <meta name="description" content="想いに、輪郭を。Web・グラフィック・AIを組み合わせたデザインポートフォリオ。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__left">
+      <a href="#top" class="header__logo">AYA IMAJO</a>
+      <span class="header__divider"></span>
+      <span class="header__tagline">Design Portfolio</span>
+    </div>
+    <button type="button" class="header__menu" id="menu-button" aria-controls="site-nav" aria-expanded="false">MENU</button>
+    <nav class="header__nav" id="site-nav">
+      <button type="button" class="header__nav-close" id="menu-close" aria-label="メニューを閉じる"></button>
+      <a href="#about"><span class="header__nav-num">01</span>ABOUT</a>
+      <a href="#works"><span class="header__nav-num">02</span>WORKS</a>
+      <a href="#what-i-do"><span class="header__nav-num">03</span>WHAT I DO</a>
+      <a href="#contact"><span class="header__nav-num">04</span>CONTACT</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <h1 class="hero__title">想いに、輪郭を。</h1>
+        <p class="hero__lead">まだ見えない想いを、<br>伝わるカタチへ。</p>
+      </div>
+      <dl class="hero__meta">
+        <div>
+          <dt>Discipline</dt>
+          <dd>WEB / GRAPHIC / AI</dd>
+        </div>
+        <div>
+          <dt>Credentials</dt>
+          <dd>AYA IMAJO / PORTFOLIO</dd>
+        </div>
+      </dl>
+      <a href="#works" class="hero__cta">VIEW WORKS ↓</a>
+    </div>
+  </section>
+
+  <!-- Selected Works -->
+  <section class="section works" id="works">
+    <div class="section__heading">
+      <h2 class="section__title"><span class="section__num">01</span>Selected Works</h2>
+      <div class="section__sub">
+        <span>制作実績</span>
+        <span class="section__accent"></span>
+      </div>
+    </div>
+
+    <div class="works__row works__row--1">
+      <a class="card card--01" href="#work-01" data-detail="work-01">
+        <div class="card__image">
+          <img src="images/work-01.jpg" alt="Wings Dance School ロゴ">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">01</span>DANCE SCHOOL</h3>
+          <p class="card__name">ダンススクールのロゴ制作</p>
+          <p class="card__tags"><span class="card__cat">Branding / Graphic</span><span class="card__dot"></span><span class="card__type">CLIENT WORK</span></p>
+        </div>
+      </a>
+
+      <a class="card card--02" href="#work-02" data-detail="work-02">
+        <div class="card__image">
+          <img src="images/work-02.jpg" alt="FLY HIGH Tシャツデザイン">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">02</span>DANCE EVENT T-SHIRT</h3>
+          <p class="card__name">ダンススクール発表会のTシャツデザイン</p>
+          <p class="card__tags"><span class="card__cat">Graphic / Apparel</span><span class="card__dot"></span><span class="card__type">CLIENT WORK</span></p>
+        </div>
+      </a>
+    </div>
+
+    <div class="works__row works__row--2">
+      <a class="card card--03" href="#work-03" data-detail="work-03">
+        <div class="card__image">
+          <img src="images/work-03.jpg" alt="ぎょうざの龍門 ポスター">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">03</span>RAKUTEN EAGLES GYOZA FESTIVAL<span class="card__badge">2nd PLACE</span></h3>
+          <p class="card__name">楽天イーグルス餃子祭り　第２位</p>
+          <p class="card__tags"><span class="card__cat">Graphic / Event ・ Competition</span></p>
+        </div>
+      </a>
+
+      <a class="card card--04" href="#work-04" data-detail="work-04">
+        <div class="card__image">
+          <img src="images/work-04.jpg" alt="尾道ライオンズクラブ キャラクター">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">04</span>LIONS CLUB CHARACTER</h3>
+          <p class="card__name">尾道ライオンズクラブのキャラクター制作</p>
+          <p class="card__tags"><span class="card__cat">Character Design</span><span class="card__dot"></span><span class="card__type">CLIENT WORK</span></p>
+        </div>
+      </a>
+    </div>
+
+    <div class="works__row works__row--3">
+      <a class="card card--05" href="#work-05" data-detail="work-05">
+        <div class="card__image">
+          <img src="images/work-05.jpg" alt="サンタックスグループ 採用キービジュアル">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">05</span>RECRUITMENT VISUAL</h3>
+          <p class="card__name">サンタックスグループ 採用キービジュアル　入賞</p>
+          <p class="card__tags"><span class="card__cat">Graphic / Key Visual</span><span class="card__dot"></span><span class="card__type">COMPETITION</span></p>
+        </div>
+      </a>
+
+      <a class="card card--06" href="#work-06" data-detail="work-06">
+        <div class="card__image card__image--pair">
+          <img src="images/work-06a.jpg" alt="LAVA CLIP LPキービジュアル 1">
+          <img src="images/work-06b.jpg" alt="LAVA CLIP LPキービジュアル 2">
+        </div>
+        <div class="card__body">
+          <h3 class="card__head"><span class="card__num">06</span>SPEAKER LP VISUAL</h3>
+          <p class="card__name">「LAVA CLIP」 LPキービジュアル　入賞</p>
+          <p class="card__tags"><span class="card__cat">Web / Visual Design</span><span class="card__dot"></span><span class="card__type">COMPETITION</span></p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section about" id="about">
+    <div class="about__image">
+      <img src="images/about.jpg" alt="AYA IMAJO">
+    </div>
+    <div class="about__content">
+      <div class="section__heading">
+        <h2 class="section__title"><span class="section__num">02</span>About</h2>
+      </div>
+      <div class="about__text">
+        <p class="about__lead">伝えたい想いを、<br>きちんと届くカタチへ。</p>
+        <p>Web、グラフィック、生成AIを組み合わせながら、<br>目的や伝えたい想いに合ったデザインを考えています。</p>
+        <p>見た目を整えるだけではなく、<br>『誰に、何を、どう伝えるのか』を大切にし、<br>シンプルで心に残るデザインを目指しています。</p>
+        <p class="about__note">※現在、デザインの基礎を体系的に学びながら、実際の案件獲得、デザインコンペティション、<br>そして自主制作ワークを精力的に重ね、一つひとつの作品に対して丁寧に向き合う制作経験を積んでいます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What I Do -->
+  <section class="section skills" id="what-i-do">
+    <div class="section__heading">
+      <h2 class="section__title"><span class="section__num">03</span>What I Do</h2>
+      <div class="section__sub">
+        <span>できること / ツール</span>
+      </div>
+    </div>
+    <ul class="skills__list">
+      <li>
+        <span class="skills__num">01</span>
+        <span class="skills__title">WEB DESIGN</span>
+        <span class="skills__desc">LP、Webサイト、UIなどのデザイン。情報を整理し、使いやすく伝わりやすい構成を考えます。</span>
+      </li>
+      <li>
+        <span class="skills__num">02</span>
+        <span class="skills__title">GRAPHIC DESIGN</span>
+        <span class="skills__desc">POP、KV、広告ビジュアル、Tシャツなど、目的や媒体に合わせたデザイン。</span>
+      </li>
+      <li>
+        <span class="skills__num">03</span>
+        <span class="skills__title">LOGO / BRANDING</span>
+        <span class="skills__desc">ロゴやビジュアルを通して、ブランドらしさが伝わる表現を考えます。</span>
+      </li>
+      <li>
+        <span class="skills__num">04</span>
+        <span class="skills__title">UI DESIGN</span>
+        <span class="skills__desc">Figmaを使用したWebサイトやサービスの画面設計。</span>
+      </li>
+      <li>
+        <span class="skills__num">05</span>
+        <span class="skills__title">AI CREATIVE</span>
+        <span class="skills__desc">生成AIを活用したビジュアル制作・アイデア展開。</span>
+      </li>
+      <li>
+        <span class="skills__num">06</span>
+        <span class="skills__title">FRONT-END <small>学習中</small></span>
+        <span class="skills__desc">HTML / CSS / JavaScriptを使用したWebページ制作。</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Other Works -->
+  <section class="section others">
+    <div class="section__heading">
+      <h2 class="section__title"><span class="section__num">04</span>Other Works</h2>
+      <div class="section__sub">
+        <span>自主制作・学習課題</span>
+        <span class="section__accent"></span>
+      </div>
+    </div>
+    <div class="others__row">
+      <a class="ocard" href="#work-07" data-detail="work-07">
+        <div class="ocard__image">
+          <img src="images/other-07.jpg" alt="TOKINAL 飲食店検索サイト">
+        </div>
+        <div class="ocard__body">
+          <h3 class="ocard__title">TOKINAL</h3>
+          <p class="ocard__name">飲食店検索サイト UI設計</p>
+          <p class="ocard__desc">学習用架空課題。トップページ、店舗詳細、コース詳細からSP版レイアウトへの全画面コンポーネント設計。</p>
+          <p class="ocard__tags"><span class="ocard__cat">WEB DESIGN / UI DESIGN</span><span class="card__dot"></span><span class="ocard__type">PERSONAL WORK</span></p>
+        </div>
+      </a>
+      <a class="ocard" href="#work-08" data-detail="work-08">
+        <div class="ocard__image">
+          <img src="images/other-08.jpg" alt="LUMIA / IONIC PRO ランディングページ">
+        </div>
+        <div class="ocard__body">
+          <h3 class="ocard__title">LUMIA / IONIC PRO</h3>
+          <p class="ocard__name">美顔ヘアケア家電 ランディングページ</p>
+          <p class="ocard__desc">学習用架空課題。製品が持つ高貴さとテクノロジーをミニマルに伝えるタイポグラフィとグリッドワーク。</p>
+          <p class="ocard__tags"><span class="ocard__cat">LANDING PAGE / VISUAL DESIGN</span><span class="card__dot"></span><span class="ocard__type">PERSONAL WORK</span></p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <p class="contact__label">05 / CONTACT</p>
+    <h2 class="contact__title">LET'S CREATE<br>SOMETHING TOGETHER.</h2>
+    <p class="contact__text">ご覧いただきありがとうございます。<br>ご連絡はこちらからお願いいたします。</p>
+    <a href="mailto:ayaimajo.design@gmail.com" class="contact__button">Email &nbsp;→</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__left">
+      <span class="footer__logo">AYA IMAJO</span>
+      <span class="footer__divider"></span>
+      <span class="footer__tagline">DESIGN PORTFOLIO</span>
+    </div>
+    <div class="footer__right">
+      <span class="footer__copy">© 2026 AYA IMAJO</span>
+      <a href="#top" class="footer__top">BACK TO TOP ↑</a>
+    </div>
+  </footer>
+
+  <!-- ==========================================================
+       Work Detail overlay(作品クリックで開く)
+       ========================================================== -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+
+    <article class="detail" id="work-01" role="dialog" aria-modal="true" aria-labelledby="work-01-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-01.jpg" alt="Wings Dance School ロゴ">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">01</span><span class="detail__cat">BRANDING / GRAPHIC</span></p>
+        <h2 class="detail__title" id="work-01-title">DANCE SCHOOL</h2>
+        <p class="detail__subtitle">ダンススクールのロゴ制作</p>
+        <p class="detail__body">ダンススクールのロゴマーク制作。しなやかな動きを感じさせる筆記体のタイポグラフィに翼のモチーフを組み合わせ、<br>軽やかさと躍動感のあるブランドイメージを表現しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>当時のロゴのイメージを引き継ぎつつ、よりかわいくポップで元気のあるダンスチームらしさを表現。遠くからでもひと目で分かる視認性の高いデザインを心がけました。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>Canva / Illustrator / Clip Studio</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">BRANDING / GRAPHIC</span><span class="card__dot"></span><span class="detail__tag2">CLIENT WORK</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-02" role="dialog" aria-modal="true" aria-labelledby="work-02-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-02.jpg" alt="FLY HIGH Tシャツデザイン">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">02</span><span class="detail__cat">GRAPHIC / APPAREL</span></p>
+        <h2 class="detail__title" id="work-02-title">DANCE EVENT T-SHIRT</h2>
+        <p class="detail__subtitle">ダンススクール発表会のTシャツデザイン</p>
+        <p class="detail__body">発表会に向けたオリジナルTシャツのグラフィックデザイン。ロゴを軸に、立体感のあるタイポグラフィで高揚感を演出しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>クライアントから「白地にピンク」のご要望があったため、キャッチコピーに合わせて、発表会という舞台で子どもたちが飛び跳ねる、かわいく元気の良いイメージで制作しました。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>Canva / Illustrator / Clip Studio</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">GRAPHIC / APPAREL</span><span class="card__dot"></span><span class="detail__tag2">CLIENT WORK</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-04" role="dialog" aria-modal="true" aria-labelledby="work-04-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-04.jpg" alt="尾道ライオンズクラブ キャラクター おのらいおん">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">04</span><span class="detail__cat">CHARACTER DESIGN</span></p>
+        <h2 class="detail__title" id="work-04-title">LIONS CLUB CHARACTER</h2>
+        <p class="detail__subtitle">尾道ライオンズクラブのキャラクター制作</p>
+        <p class="detail__body">尾道ライオンズクラブのオリジナルキャラクター「おのらいおん」を制作。<br>地域に親しみを感じてもらえるよう、やさしく親しみやすいデザインで表現しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>尾道という土地を表すキャラクターとして、海をイメージした帽子、桜のしっぽ、レモンを持たせました。クラブのキャラクターとして子どもから大人まで知名度を上げたいという思いから、親しみやすいかわいいライオンに仕上げています。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Clip Studio</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">CHARACTER DESIGN</span><span class="card__dot"></span><span class="detail__tag2">CLIENT WORK</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-03" role="dialog" aria-modal="true" aria-labelledby="work-03-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-03.jpg" alt="ぎょうざの龍門 テントPOP">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">03</span><span class="detail__cat">GRAPHIC / EVENT・COMPETITION</span></p>
+        <h2 class="detail__title" id="work-03-title">RAKUTEN EAGLES GYOZA FESTIVAL</h2>
+        <p class="detail__subtitle">楽天イーグルス餃子祭り「ぎょうざの龍門」テントPOPデザイン  ２位</p>
+        <p class="detail__body">楽天イーグルス主催・餃子祭り「ぎょうざの龍門」テントPOPデザインにて第2位を受賞したグラフィック作品。<br>本場宇都宮の味を伝える力強いビジュアルとタイポグラフィを制作しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>大きなイベント会場で遠くから見ても、子どもから大人まで「おいしそう！」と思える視認性の高さを重視。価格を見たときに、餃子へのこだわりで納得してもらえるPOPに仕上げました。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Illustrator</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">GRAPHIC / EVENT・COMPETITION</span><span class="card__dot"></span><span class="detail__tag2">2nd PLACE</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-05" role="dialog" aria-modal="true" aria-labelledby="work-05-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-05.jpg" alt="サンタックスグループ 採用キービジュアル">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">05</span><span class="detail__cat">GRAPHIC / KEY VISUAL</span></p>
+        <h2 class="detail__title" id="work-05-title">RECRUITMENT VISUAL</h2>
+        <p class="detail__subtitle">サンタックスグループ 採用キービジュアル　入賞</p>
+        <p class="detail__body">サンタックスグループの採用活動向けキービジュアル。「整備士は、未来を動かす仕事だ。」というメッセージを軸に、<br>整備士のかっこよさを伝えるビジュアルを制作しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>「整備士はかっこいい職業、未来のある職業なんだ」ということがひと目で伝わるよう、思わず目に留まるデザインにしました。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Illustrator</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">GRAPHIC / KEY VISUAL</span><span class="card__dot"></span><span class="detail__tag2">COMPETITION</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-06" role="dialog" aria-modal="true" aria-labelledby="work-06-title" hidden>
+      <div class="detail__image detail__image--pair">
+        <img src="images/detail-06a.jpg" alt="LAVA CLIP LPキービジュアル 1">
+        <img src="images/detail-06b.jpg" alt="LAVA CLIP LPキービジュアル 2">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">06</span><span class="detail__cat">WEB / VISUAL DESIGN</span></p>
+        <h2 class="detail__title" id="work-06-title">SPEAKER LP VISUAL</h2>
+        <p class="detail__subtitle">「LAVA CLIP」 LPキービジュアル　入賞</p>
+        <p class="detail__body">ワイヤレススピーカー「LAVA CLIP」のLPキービジュアル。2台で楽しめる製品特性から親子をターゲットに設定し、<br>音楽を通して一緒に過ごす時間の楽しさが伝わるビジュアルを表現しました。</p>
+        <div class="detail__point">
+          <h3>Point</h3>
+          <p>2台セットで購入するスピーカーという特性から、「場所を選ばず、子どもと一緒に音楽を楽しむ」をテーマに制作しました。</p>
+        </div>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Illustrator</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">WEB / VISUAL DESIGN</span><span class="card__dot"></span><span class="detail__tag2">COMPETITION</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-07" role="dialog" aria-modal="true" aria-labelledby="work-07-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-07.jpg" alt="TOKINAL 飲食店検索サイト">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">07</span><span class="detail__cat">WEB DESIGN / UI DESIGN</span></p>
+        <h2 class="detail__title" id="work-07-title">TOKINAL</h2>
+        <p class="detail__subtitle">飲食店検索サイト UI設計</p>
+        <p class="detail__body">学習用架空課題。トップページ、店舗詳細、コース詳細からSP版レイアウトへの全画面コンポーネント設計。</p>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Figma / VS Code</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">WEB DESIGN / UI DESIGN</span></p>
+      </div>
+    </article>
+
+    <article class="detail" id="work-08" role="dialog" aria-modal="true" aria-labelledby="work-08-title" hidden>
+      <div class="detail__image">
+        <img src="images/detail-08.jpg" alt="LUMIA / IONIC PRO ランディングページ">
+        <button type="button" class="detail__close" data-close aria-label="閉じる"></button>
+      </div>
+      <div class="detail__content">
+        <p class="detail__eyebrow"><span class="detail__num">08</span><span class="detail__cat">LANDING PAGE / VISUAL DESIGN</span></p>
+        <h2 class="detail__title" id="work-08-title">LUMIA / IONIC PRO</h2>
+        <p class="detail__subtitle">美顔ヘアケア家電 ランディングページ</p>
+        <p class="detail__body">自主制作LP。製品が持つ高貴さとテクノロジーをミニマルに伝えるタイポグラフィとグリッドワーク。</p>
+        <dl class="detail__meta">
+          <div><dt>Tools</dt><dd>ChatGPT / Figma / VS Code</dd></div>
+        </dl>
+        <p class="detail__tags"><span class="detail__tag1">LANDING PAGE / VISUAL DESIGN</span></p>
+      </div>
+    </article>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

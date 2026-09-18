@@ -1,0 +1,964 @@
+/* ==========================================================
+   AYA IMAJO — Design Portfolio
+   Figma: aya-imajo-portfolio-pc (1440px)
+   ========================================================== */
+
+:root {
+  --ink: #111;
+  --ink-60: rgba(17, 17, 17, 0.6);
+  --ink-40: rgba(17, 17, 17, 0.4);
+  --ink-30: rgba(17, 17, 17, 0.3);
+  --line: rgba(17, 17, 17, 0.11);
+  --line-soft: rgba(17, 17, 17, 0.06);
+  --paper: #fff;
+  --paper-warm: #f5f5f3;
+
+  --serif-en: "Cormorant Garamond", "Times New Roman", serif;
+  --serif-jp: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans-en: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --sans-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+
+  --gutter: 80px;
+  --content: 1280px;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans-jp);
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p, dl, dd, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ---------- Header ---------- */
+.header {
+  height: 88px;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header__logo {
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+}
+.header__divider {
+  width: 1px;
+  height: 16px;
+  background: var(--line);
+}
+.header__tagline {
+  font-family: var(--sans-en);
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.header__nav {
+  display: flex;
+  gap: 27px;
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 16px;
+}
+.header__nav a { transition: opacity 0.2s; }
+.header__nav a:hover { opacity: 0.5; }
+.header__nav-num,
+.header__nav-close,
+.header__menu { display: none; }
+
+/* MENU ボタン(Figma: Menu Button)— スマホでのみ表示 */
+.header__menu {
+  padding: 8px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.header__menu:hover,
+.header__menu[aria-expanded="true"] { background: var(--ink); color: #fff; }
+.header__menu:active { opacity: 0.6; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  height: 820px;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: url("images/hero-raw.png") center bottom / cover no-repeat;
+}
+.hero__inner {
+  width: 624px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.hero__title {
+  font-family: var(--serif-jp);
+  font-weight: 300;
+  font-size: 68px;
+  line-height: 1.2;
+}
+.hero__lead {
+  font-size: 18px;
+  color: var(--ink-60);
+  line-height: 1.8;
+}
+.hero__meta {
+  display: flex;
+  gap: 40px;
+}
+.hero__meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hero__meta dt {
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.hero__meta dd {
+  font-family: var(--serif-en);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.hero__cta {
+  align-self: flex-start;
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  transition: opacity 0.2s;
+}
+.hero__cta:hover { opacity: 0.5; }
+
+/* ---------- Section common ---------- */
+.section {
+  padding: 120px var(--gutter);
+  border-top: 1px solid var(--line);
+}
+.section__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.section__title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--serif-en);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.section__num {
+  font-style: italic;
+  font-size: 24px;
+  color: var(--ink-40);
+}
+.section__sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--ink-60);
+}
+.section__accent {
+  width: 80px;
+  height: 1px;
+  background: var(--ink);
+  opacity: 0.3;
+}
+
+/* ---------- Selected Works ---------- */
+.works {
+  display: flex;
+  flex-direction: column;
+  gap: 112px;
+  background: var(--paper);
+}
+.works__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+.works__row--2 { gap: 83px; align-items: center; }
+.works__row--3 { gap: 41px; }
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.card__image {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 2px;
+}
+.card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(1);
+  transition: transform 0.6s ease, filter 0.5s ease;
+}
+/* Figma: 一覧はモノクロ(彩度 -1)、hover でカラー版に切り替わる */
+.card:hover .card__image img {
+  transform: scale(1.03);
+  filter: grayscale(0);
+}
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.card__num {
+  font-family: var(--sans-en);
+  font-size: 11px;
+  color: var(--ink-40);
+}
+.card__badge {
+  margin-left: 12px;
+  padding: 2px 8px;
+  border-radius: 1px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--sans-en);
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.card__name {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.card__tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}
+.card__cat {
+  font-family: var(--serif-en);
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.card__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink-40);
+}
+.card__type {
+  font-size: 11px;
+  color: var(--ink-40);
+}
+
+/* individual card sizes (editorial layout) */
+.card--01 { width: 622px; }
+.card--01 .card__image { width: 596px; height: 335px; }
+.card--02 { width: 626px; }
+.card--02 .card__image { width: 626px; height: 337px; }
+
+.card--03 { width: 536px; gap: 30px; }
+.card--03 .card__image { width: 496px; height: 669px; }
+.card--04 { width: 578px; padding-top: 141px; gap: 23px; }
+.card--04 .card__image { width: 528px; height: 527px; margin-left: 7px; }
+
+.card--05 { width: 561px; }
+.card--05 .card__image { width: 561px; height: 316px; }
+.card--06 { width: 624px; }
+.card--06 .card__image--pair {
+  display: flex;
+  width: 660px;
+  height: 448px;
+}
+.card--06 .card__image--pair img { width: 50%; }
+
+/* ---------- About ---------- */
+.about {
+  display: flex;
+  align-items: center;
+  gap: 133px;
+  background: var(--paper-warm);
+}
+.about__image {
+  flex-shrink: 0;
+  width: 343px;
+  height: 426px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.about__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.about__content {
+  width: 733px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.about__text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--ink-60);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.about__lead {
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 16px;
+}
+.about__note {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+/* ---------- What I Do ---------- */
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  background: var(--paper);
+}
+.skills__list li {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+.skills__num {
+  width: 60px;
+  flex-shrink: 0;
+  font-family: var(--serif-en);
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--ink-40);
+}
+.skills__title {
+  width: 405px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.skills__title small {
+  font-family: var(--sans-jp);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--ink-40);
+}
+.skills__desc {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* ---------- Other Works ---------- */
+.others {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  background: var(--paper-warm);
+}
+.others__row {
+  display: flex;
+  gap: 32px;
+}
+.ocard {
+  width: 624px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  cursor: pointer;
+}
+.ocard__image {
+  height: 320px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.ocard__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: transform 0.6s ease, filter 0.5s ease;
+}
+.ocard:hover .ocard__image img {
+  transform: scale(1.03);
+  filter: grayscale(0);
+}
+.ocard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.2;
+}
+.ocard__title {
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 18px;
+}
+.ocard__name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink-60);
+}
+.ocard__desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+.ocard__tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ocard__cat {
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 11px;
+}
+.ocard__type {
+  font-size: 11px;
+  color: var(--ink-40);
+}
+
+/* ---------- Contact ---------- */
+.contact {
+  padding: 160px var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: var(--ink);
+  color: #fff;
+  text-align: center;
+}
+.contact__label {
+  font-family: var(--serif-en);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.contact__title {
+  font-family: var(--serif-en);
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1.2;
+}
+.contact__text {
+  font-size: 15px;
+  line-height: 1.8;
+  opacity: 0.7;
+}
+.contact__button {
+  margin-top: 32px;
+  padding: 20px 40px;
+  border-radius: 2px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--sans-en);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: opacity 0.2s;
+}
+.contact__button:hover { opacity: 0.85; }
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 48px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ink);
+  color: #fff;
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+}
+.footer__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.footer__logo {
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.footer__divider {
+  width: 1px;
+  height: 12px;
+  background: #fff;
+  opacity: 0.3;
+}
+.footer__tagline {
+  font-family: var(--sans-en);
+  font-weight: 500;
+  font-size: 10px;
+  opacity: 0.6;
+}
+.footer__right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-family: var(--sans-en);
+  font-size: 11px;
+  line-height: 1.2;
+}
+.footer__copy { opacity: 0.4; }
+.footer__top { font-weight: 600; opacity: 0.8; transition: opacity 0.2s; }
+.footer__top:hover { opacity: 1; }
+
+/* ---------- Work Detail overlay ---------- */
+body.is-modal-open { overflow: hidden; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.modal.is-open { display: flex; }
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.6);
+  animation: modal-fade 0.25s ease;
+}
+.detail {
+  position: relative;
+  width: 960px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  border-radius: 4px;
+  background: #fff;
+  animation: modal-rise 0.3s ease;
+}
+.detail[hidden] { display: none; }
+.detail:focus { outline: none; }
+.detail__close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.detail__image {
+  /* 上と左右に余白を取り、本文と同じ幅(832px)に揃える。×ボタンはこの余白に置く */
+  position: static;
+  margin: 64px 64px 0;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #fff;
+}
+.detail__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail__image--pair { display: flex; }
+.detail__image--pair img { width: 50%; }
+
+.detail__close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent url("images/close.svg") center / 32px 32px no-repeat;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+.detail__close:hover { opacity: 1; }
+
+.detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 48px 64px 56px;
+}
+.detail__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.2;
+}
+.detail__num {
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-40);
+}
+.detail__cat {
+  font-family: var(--serif-en);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--ink-60);
+}
+.detail__title {
+  font-family: var(--serif-en);
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.detail__subtitle {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+}
+.detail__body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(17, 17, 17, 0.7);
+}
+.detail__point {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  border-left: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.detail__point h3 {
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.detail__point p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(17, 17, 17, 0.7);
+}
+.detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  padding-top: 4px;
+}
+.detail__meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.detail__meta dt {
+  font-family: var(--sans-en);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.detail__meta dd {
+  font-family: var(--serif-en);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
+}
+.detail__tags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  line-height: 1.2;
+}
+.detail__tag1 {
+  font-family: var(--serif-en);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--ink-60);
+}
+.detail__tag2 {
+  font-size: 11px;
+  color: var(--ink-40);
+}
+
+/* ==========================================================
+   Responsive
+   Figma は PC 版(1440px)のみのため、それ未満は暫定対応
+   ========================================================== */
+@media (max-width: 1439px) {
+  :root { --gutter: 40px; }
+  .works__row,
+  .others__row { flex-wrap: wrap; }
+  .card,
+  .ocard { flex-shrink: 1; max-width: 100%; }
+  .card__image,
+  .card--06 .card__image--pair { max-width: 100%; }
+  .about { gap: 64px; }
+  .about__content { width: auto; flex: 1; }
+}
+
+@media (max-width: 900px) {
+  :root { --gutter: 20px; }
+  body.is-nav-open { overflow: hidden; }
+
+  /* ---- Header: ロゴ+タグラインは縦積み。MENU ボタン表示、ナビは全画面パネル ---- */
+  .header {
+    height: auto;
+    padding: 16px var(--gutter);
+  }
+  .header__left { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .header__logo { font-size: 16px; }
+  .header__divider { display: none; }
+  .header__tagline { font-size: 9px; }
+  .header__menu {
+    display: block;
+    padding: 6px 12px;
+    border-radius: 2px;
+    font-size: 10px;
+  }
+
+  .header__nav {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    padding: 0 var(--gutter);
+    background: var(--paper);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+  }
+  .header__nav.is-open { opacity: 1; visibility: visible; }
+  .header__nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--serif-en);
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .header__nav a:first-of-type { border-top: 1px solid var(--line); }
+  .header__nav-num {
+    display: inline;
+    font-family: var(--sans-en);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--ink-40);
+  }
+  .header__nav-close {
+    display: block;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent url("images/close.svg") center / 32px 32px no-repeat;
+    cursor: pointer;
+  }
+
+  /* ---- Hero: デスクトップと同じく写真を全面に敷き、テキストを重ねる(Figmaモバイルフレーム準拠) ---- */
+  .hero {
+    height: auto;
+    min-height: 0;
+    align-items: flex-start;
+    padding: 48px var(--gutter);
+    background-position: center bottom;
+    background-size: cover;
+  }
+  .hero__inner { width: 100%; gap: 32px; }
+  .hero__copy { gap: 16px; }
+  .hero__title { font-size: 40px; line-height: 1.25; white-space: normal; }
+  .hero__lead { font-size: 14px; }
+  .hero__meta { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .hero__meta div { gap: 4px; }
+  .hero__meta dt { font-size: 10px; }
+  .hero__meta dd { font-size: 13px; }
+  .hero__cta { padding-top: 8px; font-size: 12px; }
+
+  /* ---- Section common ---- */
+  .section { padding: 56px var(--gutter); }
+  .section__heading { gap: 12px; }
+  .section__title { gap: 8px; font-size: 24px; }
+  .section__num { font-size: 20px; }
+  .section__sub { font-size: 12px; }
+  .section__accent { width: 40px; }
+
+  /* ---- Selected Works: 1 列。カード画像は高さ固定(180 / 260px)で cover ---- */
+  .works { gap: 32px; }
+  .works__row { flex-direction: column; align-items: stretch; gap: 32px; }
+  .works__row:first-child { margin-top: 16px; }
+  .card { width: 100% !important; padding-top: 0 !important; gap: 14px !important; }
+  .card__image {
+    width: 100% !important;
+    height: 180px !important;
+    margin-left: 0 !important;
+  }
+  .card--03 .card__image,
+  .card--04 .card__image,
+  .card--06 .card__image { height: 260px !important; }
+  .card__image img { height: 100%; object-position: bottom; }
+  .card--06 .card__image--pair { display: flex; }
+  .card--06 .card__image--pair img { width: 50%; }
+  .card__body { gap: 6px; }
+  .card__head { flex-wrap: wrap; row-gap: 6px; }
+
+  /* work-03(ぎょうざ)と work-04(ライオン)はモバイルのみ表示順を入れ替え */
+  .card--04 { order: 1; }
+  .card--03 { order: 2; position: relative; }
+  .card--03 .card__badge {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    margin-left: 0;
+    padding: 3px 8px;
+    font-size: 9px;
+  }
+
+  /* ---- About ---- */
+  .about { flex-direction: column; align-items: stretch; gap: 32px; }
+  .about__image { width: 100%; height: 320px; aspect-ratio: auto; max-width: none; }
+  .about__content { width: auto; gap: 32px; }
+  .about__text p br { display: none; }
+
+  /* ---- What I Do: 番号+タイトル / 説明 の 2 行 ---- */
+  .skills { gap: 32px; }
+  .skills__list li { flex-wrap: wrap; gap: 12px 8px; padding: 20px 0; }
+  .skills__num { width: auto; font-size: 15px; }
+  .skills__title { width: auto; font-size: 16px; }
+  .skills__desc { flex-basis: 100%; font-size: 13px; }
+
+  /* ---- Other Works: モバイルでは説明文を非表示(Figma準拠) ---- */
+  .others { gap: 32px; }
+  .others__row { flex-direction: column; gap: 32px; }
+  .ocard { width: 100%; }
+  .ocard__image { height: 180px; aspect-ratio: auto; }
+  .ocard__body { gap: 6px; }
+  .ocard__title { font-size: 15px; }
+  .ocard__name { font-size: 13px; }
+  .ocard__desc { display: none; }
+  .ocard__tags { flex-wrap: wrap; row-gap: 4px; }
+
+  /* ---- Contact / Footer ---- */
+  .contact { padding: 72px var(--gutter); gap: 32px; }
+  .contact__title { font-size: 32px; }
+  .contact__text { font-size: 13px; }
+  .contact__button { margin-top: 0; padding: 16px 32px; }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 32px var(--gutter);
+    text-align: left;
+    opacity: 0.9;
+  }
+  .footer__left { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .footer__divider { display: none; }
+  .footer__logo { font-size: 15px; }
+  .footer__right { flex-direction: row; justify-content: space-between; width: 100%; gap: 0; }
+
+  /* ---- Work Detail overlay ---- */
+  .modal { padding: 16px; align-items: flex-start; }
+  .detail { margin-top: 16px; max-height: calc(100% - 16px); }
+  .detail__image { margin: 56px 20px 0; }
+  .detail__close { top: 12px; right: 12px; }
+  .detail__content { gap: 14px; padding: 28px 20px 32px; }
+  .detail__eyebrow { flex-wrap: wrap; row-gap: 6px; }
+  .detail__title { font-size: 24px; }
+  .detail__subtitle { font-size: 16px; }
+  .detail__body { font-size: 13px; }
+  .detail__body br { display: none; }
+  .detail__tags { flex-wrap: wrap; row-gap: 6px; }
+}
