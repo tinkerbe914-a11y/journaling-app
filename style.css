@@ -484,6 +484,7 @@ img { display: block; max-width: 100%; }
   font-size: 12px;
   line-height: 1.6;
   color: var(--ink-40);
+  min-height: 3.2em; /* 説明文が1行/2行どちらでもタグ行の位置を揃える */
 }
 .ocard__tags {
   display: flex;
