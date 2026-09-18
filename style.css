@@ -314,9 +314,10 @@ img { display: block; max-width: 100%; }
 
 /* individual card sizes (editorial layout) */
 .card--01 { width: 522px; }
-.card--01 .card__image { width: 500px; height: 281px; }
+.card--01 .card__image { width: 500px; height: 420px; }
+.card--01 .card__image img { object-fit: contain; background: #fff; }
 .card--02 { width: 726px; }
-.card--02 .card__image { width: 726px; height: 391px; }
+.card--02 .card__image { width: 726px; height: 420px; }
 .card--02 .card__image img { object-fit: contain; background: #fff; }
 
 .card--03 { width: 536px; gap: 30px; }
@@ -789,8 +790,8 @@ body.is-modal-open { overflow: hidden; }
 
   .card__image,
   .card--06 .card__image--pair { width: 100%; max-width: 100%; height: auto; }
-  .card--01 .card__image { aspect-ratio: 596 / 335; }
-  .card--02 .card__image { aspect-ratio: 626 / 337; }
+  .card--01 .card__image { aspect-ratio: 500 / 420; }
+  .card--02 .card__image { aspect-ratio: 726 / 420; }
   .card--03 .card__image { aspect-ratio: 496 / 669; }
   .card--04 .card__image { aspect-ratio: 528 / 527; margin-left: 0; }
   .card--05 .card__image { aspect-ratio: 561 / 316; }
