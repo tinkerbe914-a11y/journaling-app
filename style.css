@@ -313,10 +313,10 @@ img { display: block; max-width: 100%; }
 }
 
 /* individual card sizes (editorial layout) */
-.card--01 { width: 622px; }
-.card--01 .card__image { width: 596px; height: 335px; }
-.card--02 { width: 626px; }
-.card--02 .card__image { width: 626px; height: 337px; }
+.card--01 { width: 522px; }
+.card--01 .card__image { width: 500px; height: 281px; }
+.card--02 { width: 726px; }
+.card--02 .card__image { width: 726px; height: 391px; }
 
 .card--03 { width: 536px; gap: 30px; }
 .card--03 .card__image { width: 496px; height: 669px; }
@@ -778,8 +778,8 @@ body.is-modal-open { overflow: hidden; }
   .card,
   .ocard { flex-shrink: 1; flex-grow: 0; min-width: 0; }
 
-  .card--01 { width: 48.6%; }
-  .card--02 { width: 48.9%; }
+  .card--01 { width: 40.8%; }
+  .card--02 { width: 56.7%; }
   .card--03 { width: 41.9%; }
   .card--04 { width: 45.2%; padding-top: 11%; }
   .card--05 { width: 43.8%; }
