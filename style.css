@@ -769,12 +769,35 @@ body.is-modal-open { overflow: hidden; }
    ========================================================== */
 @media (max-width: 1439px) {
   :root { --gutter: 40px; }
+
+  /* 1440px 未満でも 2 カードの横並びを維持し、幅比率を保ったまま縮小する
+     (元の CSS は 622px 等の固定 px のままだったため、1440px 未満では
+     works__row の幅に収まらず flex-wrap で縦積みになっていた) */
   .works__row,
-  .others__row { flex-wrap: wrap; }
+  .others__row { flex-wrap: nowrap; }
   .card,
-  .ocard { flex-shrink: 1; max-width: 100%; }
+  .ocard { flex-shrink: 1; flex-grow: 0; min-width: 0; }
+
+  .card--01 { width: 48.6%; }
+  .card--02 { width: 48.9%; }
+  .card--03 { width: 41.9%; }
+  .card--04 { width: 45.2%; padding-top: 11%; }
+  .card--05 { width: 43.8%; }
+  .card--06 { width: 48.75%; }
+  .ocard { width: 48.75%; }
+
   .card__image,
-  .card--06 .card__image--pair { max-width: 100%; }
+  .card--06 .card__image--pair { width: 100%; max-width: 100%; height: auto; }
+  .card--01 .card__image { aspect-ratio: 596 / 335; }
+  .card--02 .card__image { aspect-ratio: 626 / 337; }
+  .card--03 .card__image { aspect-ratio: 496 / 669; }
+  .card--04 .card__image { aspect-ratio: 528 / 527; margin-left: 0; }
+  .card--05 .card__image { aspect-ratio: 561 / 316; }
+  .card--06 .card__image--pair { aspect-ratio: 660 / 448; }
+  .card--06 .card__image--pair img { height: 100%; }
+
+  .ocard__image { height: auto; aspect-ratio: 624 / 320; }
+
   .about { gap: 64px; }
   .about__content { width: auto; flex: 1; }
 }
