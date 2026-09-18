@@ -317,6 +317,7 @@ img { display: block; max-width: 100%; }
 .card--01 .card__image { width: 500px; height: 281px; }
 .card--02 { width: 726px; }
 .card--02 .card__image { width: 726px; height: 391px; }
+.card--02 .card__image img { object-fit: contain; background: #fff; }
 
 .card--03 { width: 536px; gap: 30px; }
 .card--03 .card__image { width: 496px; height: 669px; }
