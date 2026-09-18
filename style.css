@@ -113,7 +113,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: url("images/hero-raw-v2.webp") right bottom / cover no-repeat;
+  background: url("images/hero-raw-v2.webp") right bottom / 160% auto no-repeat;
 }
 .hero__inner {
   width: 624px;
@@ -888,7 +888,7 @@ body.is-modal-open { overflow: hidden; }
     align-items: flex-start;
     padding: 48px var(--gutter);
     background-position: right bottom;
-    background-size: cover;
+    background-size: 160% auto;
   }
   .hero__inner { width: 100%; gap: 32px; }
   .hero__copy { gap: 16px; }
