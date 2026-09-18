@@ -335,7 +335,7 @@ img { display: block; max-width: 100%; }
   width: 660px;
   height: 448px;
 }
-.card--06 .card__image--pair img { width: 50%; }
+.card--06 .card__image--pair img { width: 50%; object-position: top; }
 
 /* ---------- About ---------- */
 .about {
@@ -643,7 +643,7 @@ body.is-modal-open { overflow: hidden; }
   object-fit: cover;
 }
 .detail__image--pair { display: flex; }
-.detail__image--pair img { width: 50%; }
+.detail__image--pair img { width: 50%; object-position: top; }
 
 .detail__close {
   position: absolute;
@@ -918,7 +918,7 @@ body.is-modal-open { overflow: hidden; }
   .card--06 .card__image { height: 260px !important; }
   .card__image img { height: 100%; object-position: bottom; }
   .card--06 .card__image--pair { display: flex; }
-  .card--06 .card__image--pair img { width: 50%; }
+  .card--06 .card__image--pair img { width: 50%; object-position: top; }
   .card__body { gap: 6px; }
   .card__head { flex-wrap: wrap; row-gap: 6px; }
 
