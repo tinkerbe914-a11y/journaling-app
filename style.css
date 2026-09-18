@@ -340,7 +340,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   gap: 133px;
-  background: var(--paper-warm);
+  background: var(--paper);
 }
 .about__image {
   flex-shrink: 0;
@@ -388,7 +388,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   flex-direction: column;
   gap: 80px;
-  background: var(--paper);
+  background: var(--paper-warm);
 }
 .skills__list li {
   display: flex;
