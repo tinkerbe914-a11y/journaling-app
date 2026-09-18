@@ -113,7 +113,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: url("images/hero-raw.webp") right bottom / cover no-repeat;
+  background: url("images/hero-raw-v2.webp") right bottom / cover no-repeat;
 }
 .hero__inner {
   width: 624px;
