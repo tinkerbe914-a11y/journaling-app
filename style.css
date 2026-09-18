@@ -918,10 +918,12 @@ body.is-modal-open { overflow: hidden; }
     height: 180px !important;
     margin-left: 0 !important;
   }
-  .card--03 .card__image,
   .card--04 .card__image,
   .card--06 .card__image { height: 260px !important; }
   .card__image img { height: 100%; object-position: bottom; }
+  /* work-03 は縦長ポスターなので、切り取らず全体が見えるようボックス自体の比率を写真に合わせる */
+  .card--03 .card__image { height: auto !important; aspect-ratio: 992 / 1338; }
+  .card--03 .card__image img { object-position: center; }
   .card--06 .card__image--pair { display: flex; }
   .card--06 .card__image--pair img { width: 50%; object-position: top; }
   .card__body { gap: 6px; }
