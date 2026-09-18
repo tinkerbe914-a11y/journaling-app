@@ -135,7 +135,7 @@ img { display: block; max-width: 100%; }
 }
 .hero__title-comma {
   display: inline-block;
-  margin-right: -0.3em;
+  margin-right: -0.4em;
 }
 .hero__lead {
   font-size: 18px;
