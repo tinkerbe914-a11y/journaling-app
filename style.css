@@ -131,6 +131,7 @@ img { display: block; max-width: 100%; }
   font-weight: 300;
   font-size: 68px;
   line-height: 1.2;
+  font-feature-settings: "palt";
 }
 .hero__lead {
   font-size: 18px;
