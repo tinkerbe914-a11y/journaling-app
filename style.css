@@ -1000,7 +1000,9 @@ body.is-modal-open { overflow: hidden; }
   .detail__image { margin: 56px 20px 0; }
   /* スマホの詳細オーバーレイは切り取らず、画像全体が見えるようにする(PC版は変更しない) */
   .detail__image img { object-fit: contain; background: #fff; }
-  /* LAVA CLIPの2枚組だけは隙間なく敷き詰める(全体表示にすると2枚の間に余白ができるため) */
+  /* LAVA CLIPの2枚組だけは隙間なく敷き詰める(全体表示にすると2枚の間に余白ができるため)。
+     箱の比率も実際の写真(縦長)に近づけて、下側が大きく切れないようにする */
+  .detail__image--pair { aspect-ratio: 1.54 / 1; }
   .detail__image--pair img { object-fit: cover; }
   .detail__close { top: 12px; right: 12px; }
   .detail__content { gap: 14px; padding: 28px 20px 32px; }
