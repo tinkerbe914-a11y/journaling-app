@@ -929,8 +929,9 @@ body.is-modal-open { overflow: hidden; }
   .card--06 .card__image { height: 260px !important; }
   .card__image img { height: 100%; object-position: bottom; }
   /* work-03/04 はイラスト・ポスターなので、切り取らず全体が見えるようボックス自体の比率を写真に合わせる */
-  .card--03 .card__image { height: auto !important; aspect-ratio: 992 / 1338; }
+  .card--03 .card__image { width: 65% !important; height: auto !important; aspect-ratio: 992 / 1338; margin: 0 auto !important; }
   .card--03 .card__image img { object-position: center; }
+  .card--03 .card__badge { display: none; }
   .card--04 .card__image { height: auto !important; aspect-ratio: 1056 / 1054; }
   .card--04 .card__image img { object-position: center; }
   .card--06 .card__image--pair { display: flex; }
